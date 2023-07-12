@@ -1,0 +1,91 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String
+  username: String!
+  createdAt: String
+}
+
+type AccessToken {
+  accessToken: String!
+  user: User!
+  refreshToken: String!
+}
+
+type Note {
+  id: ID!
+  title: String!
+  content: String!
+  backgroundColor: String!
+  notebookId: ID!
+  userId: ID!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Notebook {
+  id: ID!
+  name: String!
+  description: String!
+  backgroundColor: ID
+  userId: ID!
+  createdAt: DateTime!
+}
+
+type Query {
+  me: User!
+  getNotes(notebookId: String!): [Note!]!
+  getNotebooks: [Notebook!]!
+}
+
+type Mutation {
+  login(login: Login!): AccessToken!
+  register(register: Register!): AccessToken!
+  createNotebook(notebook: AddNotebook!): Notebook!
+  deleteNotebook(id: String!): Notebook!
+  createNote(note: AddNote!): Note!
+  updateNote(note: UpdateNote!): String!
+  deleteNote(id: String!): Note!
+}
+
+input Login {
+  username: String!
+  password: String!
+}
+
+input Register {
+  firstName: String!
+  lastName: String
+  username: String!
+  password: String!
+  actualPassword: String
+  createdAt: DateTime
+}
+
+input AddNotebook {
+  name: String!
+  description: String!
+  photoFilename: String
+}
+
+input AddNote {
+  title: String!
+  content: String!
+  notebookId: ID!
+  backgroundColor: String
+}
+
+input UpdateNote {
+  title: String
+  content: String
+  backgroundColor: String
+  id: ID!
+}
