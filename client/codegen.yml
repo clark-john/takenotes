@@ -1,8 +1,5 @@
 schema: http://localhost:8000/graphql
-documents: [
-  src/graphql/*.graphql,
-  src/graphql/*.gql
-]
+documents: [src/graphql/**/*.graphql]
 generates:
   src/generated.ts:
     plugins: 
@@ -10,4 +7,4 @@ generates:
       - typescript-operations
       - typescript-document-nodes
     config:
-      nameSuffix: document
+      nameSuffix: Doc

@@ -1,0 +1,10 @@
+query GetNotebooks {
+  getNotebooks {
+    id
+    name
+    userId
+    description
+    createdAt
+    backgroundColor
+  }
+}

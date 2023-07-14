@@ -19,7 +19,8 @@ const services = [NotebookService]
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
 			autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-			playground: process.env.NODE_ENV === 'development'
+			playground: process.env.NODE_ENV === 'development',
+			context: ({ req, res }: any) => ({ req, res })
 		}),
 		JwtModule.register({})
 	],

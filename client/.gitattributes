@@ -1,0 +1,3 @@
+src/generated.ts linguist-vendored
+components.d.ts linguist-vendored
+*.graphql linguist-language=GraphQL linguist-documentation=false linguist-detectable

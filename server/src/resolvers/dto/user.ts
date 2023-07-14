@@ -71,7 +71,4 @@ export class AccessToken {
 
 	@Field(() => User)
 	user: User;
-
-	@Field()
-	refreshToken: string;
 }

@@ -22,12 +22,13 @@ export default defineConfig({
 	resolve: {
 		alias: [
 			{
-				find: resolve(__dirname, "src/stores"),
-				replacement: "@stores"
+				find: "@stores",
+				replacement: resolve(__dirname, "./src/stores"),
+				
 			},
 			{
-				find: resolve(__dirname, "src/pages"),
-				replacement: "@pages"
+				find: "@generated",
+				replacement: resolve(__dirname, "src/generated.ts")
 			}
 		]
 	}

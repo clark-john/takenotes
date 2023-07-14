@@ -1,9 +1,9 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, Res } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { omit } from 'lodash';
 import {
 	AccessToken,
@@ -20,10 +20,15 @@ import { keyToId } from 'src/utils';
 export class UserResolver {
 	constructor(private jwt: JwtService, private config: ConfigService) {}
 
+	/**
+	 * Login a user
+	*/
 	@Mutation(() => AccessToken)
 	async login(
-		@Args('login') { username, password }: Login
+		@Args('login') { username, password }: Login,
+		@Context() ctx: any
 	): Promise<AccessToken> {
+		const res = ctx.res as Response;
 		let user = (await UserBase.fetch({ username })).items.find(
 			x => x.username === username
 		) as UserWithPassword & DetaObject;
@@ -36,24 +41,31 @@ export class UserResolver {
 
 		const userReturn = keyToId(this.omitPassword(user));
 
-		const accessToken = this.getAccessToken({
+		const payload = {
 			username: user.username,
 			sub: userReturn.id
-		});
+		}
 
-		const refreshToken = this.getRefreshToken({
-			username: user.username
-		});
+		const accessToken = this.getAccessToken(payload);
+		// const refreshToken = this.getRefreshToken(payload);
+
+		// this.sendRTCookie(res, refreshToken);
 
 		return {
 			accessToken,
-			user: userReturn,
-			refreshToken
+			user: userReturn
 		};
 	}
 
+	/**
+	 * Register a user
+	*/
 	@Mutation(() => AccessToken)
-	async register(@Args('register') register: Register): Promise<AccessToken> {
+	async register(
+		@Args('register') register: Register,
+		@Context() ctx: any
+	): Promise<AccessToken> {
+		const res = ctx.res as Response;
 		const args = register as Register & DetaObject;
 		args.createdAt = new Date();
 		args.actualPassword = args.password;
@@ -66,46 +78,69 @@ export class UserResolver {
 		const obj = await UserBase.put(args);
 		const user = keyToId(this.omitPassword(obj));
 
-		const accessToken = this.getAccessToken({
+		const payload = {
 			username: args.username,
 			sub: user.id
-		});
+		}
 
-		const refreshToken = this.getRefreshToken({
-			username: args.username
-		});
+		const accessToken = this.getAccessToken(payload);
+		const refreshToken = this.getRefreshToken(payload);
+
+		this.sendRTCookie(res, refreshToken);
 
 		return {
 			accessToken,
-			user,
-			refreshToken
+			user
 		};
 	}
 
+	/**
+	 * get current user or otherwise unauthorized
+	*/
 	@Query(() => User)
 	async me(@Context() ctx: { req: Request }) {
 		return keyToId(this.omitPassword(await UserBase.get(ctx.req.user.sub)));
 	}
 
+	/**
+	 * utility functions
+	*/
 	private omitPassword(
 		obj: any
 	): Omit<Record<string, any>, 'actualPassword' | 'password'> {
 		return omit(obj, ['actualPassword', 'password']);
 	}
 	private getAccessToken(payload: any) {
-		payload.exp = this.getExpInMinutes(60);
+		payload.exp = this.getExpInMinutes(10);
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_ACCESS_SECRET')
 		});
 	}
 	private getRefreshToken(payload: any) {
-		/*payload.exp = this.getExpInMinutes(20);
+		payload.exp = this.getExpInMinutes(20);
 		return this.jwt.sign(payload, {
 			secret: this.config.get("JWT_REFRESH_SECRET")
-		});*/
-		return 'sdffsds';
+		});
 	}
+
 	private getExpInMinutes(mins: number) {
-		return Math.trunc(Date.now() / 1000) + mins * 60;
+		return Math.trunc(Date.now() / 1000) + 60 * mins;
+	}
+
+	private sendRTCookie(res: Response, token: string){
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+			expires: new Date(this.getExpInMinutes(20) * 1000)
+		});
+	}
+
+	/**
+	 * simple hello world (excluded from auth)
+	*/	
+	@Query(() => String)
+	hello(){
+		return "Hello World";
 	}
 }
