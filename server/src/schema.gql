@@ -44,6 +44,7 @@ type Query {
   hello: String!
   getNotes(notebookId: String!): [Note!]!
   getNotebooks: [Notebook!]!
+  getNotebookInfo(id: String!): Notebook
 }
 
 type Mutation {

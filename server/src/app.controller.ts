@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { omit } from 'lodash';
+import { Cookies } from './decorators';
 
 interface Payload {
 	username: string;
@@ -24,10 +24,12 @@ export class AppController {
 	}
 
 	@Post("refresh")
-	refreshToken(@Req() req: Request){
-		const rtoken = req.cookies.token;
+	refreshToken(@Cookies() cookies: { token: string }){
+		const rtoken = cookies.token;
 		if (!rtoken) {
-			throw new UnauthorizedException("No refresh token");
+			return {
+				accessToken: ''
+			}
 		}
 		try {
 			const payload: Payload = this.jwt.verify(rtoken, { secret: this.config.get("JWT_REFRESH_SECRET") });
@@ -36,7 +38,9 @@ export class AppController {
 				expiresIn: Math.trunc(Date.now() / 1000) + (60 * 10)
 			})};
 		} catch (e) {
-			throw new UnauthorizedException("Refresh token invalid");
+			return {
+				accessToken: ''
+			}
 		}
 	}
 }

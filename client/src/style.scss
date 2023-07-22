@@ -43,9 +43,21 @@ body {
   transition: addTrans(background-color), addTrans(color);
 }
 
-// dark
+$scrollbar: "::-webkit-scrollbar";
+// $thumb-color: 
 
+#{$scrollbar} {
+  width: 10px;
+}
+
+#{$scrollbar}-thumb {
+  background-color: #454545;
+  border-radius: 10px;
+}
+
+// dark
 .dark {
   background-color: $dark-bg-color;
   color: #fff;
 }
+

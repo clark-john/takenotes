@@ -15,9 +15,11 @@
   },
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",
+    "@urql/exchange-retry": "^1.2.0",
     "@urql/vue": "^1.1.2",
     "dompurify": "^3.0.5",
     "graphql": "^16.7.1",
+    "jwt-decode": "^3.1.2",
     "marked": "^5.1.1",
     "pinia": "^2.1.4",
     "vue": "^3.2.47",

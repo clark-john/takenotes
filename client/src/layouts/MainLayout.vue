@@ -2,7 +2,7 @@
 /* eslint-disable vue/no-setup-props-destructure */
 const { withNavbar } = defineProps<{
 	withNavbar: boolean;
-}>()
+}>();
 </script>
 
 <template>

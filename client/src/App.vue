@@ -5,35 +5,49 @@ import { onMounted, ref, Ref } from 'vue';
 const themeRef: Ref<GlobalTheme | null> = ref(null);
 const body = document.body;
 
-function checkTheme(){
-	const theme = localStorage.getItem("theme");
+function checkTheme() {
+	const theme = localStorage.getItem('theme');
 	if (theme === 'dark') {
 		themeRef.value = darkTheme;
-		body.classList.add("dark");
-	}	else {
+		body.classList.add('dark');
+	} else {
 		themeRef.value = null;
-		body.classList.remove("dark");
+		body.classList.remove('dark');
 	}
 }
 
 onMounted(() => {
 	checkTheme();
-	window.addEventListener("setTheme", (ev: Event) => {
-		localStorage.setItem("theme", (ev as CustomEvent).detail);
+	window.addEventListener('setTheme', (ev: Event) => {
+		localStorage.setItem('theme', (ev as CustomEvent).detail);
 		checkTheme();
 	});
 	setTimeout(() => {
-		body.classList.add("transition");
+		body.classList.add('transition');
 	}, 80);
 });
+
+// const token: Ref<string | null> = ref(localStorage.getItem("token"));
+// const url = import.meta.env.VITE_SERVER_URL;
+
+/*watchEffect(() => {
+	fetch(url + "/refresh", {
+		method: "POST"
+	}).then(x => x.json()).then(x => {
+		loading.value = false;
+		localStorage.setItem("token", x.accessToken);
+	});
+});*/
 </script>
 
 <template>
 	<n-config-provider :theme="themeRef">
 		<n-message-provider>
-			<n-loading-bar-provider>
-				<router-view></router-view>
-			</n-loading-bar-provider>
+			<n-dialog-provider>
+				<n-loading-bar-provider>
+					<router-view></router-view>
+				</n-loading-bar-provider>
+			</n-dialog-provider>
 		</n-message-provider>
 	</n-config-provider>
 </template>

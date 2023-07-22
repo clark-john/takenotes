@@ -22,7 +22,9 @@
 
     "paths": {
       "@stores/*": ["./src/stores/*"],
-      "@generated": ["./src/generated"]
+      "@stores": ["./src/stores"],
+      "@generated": ["./src/generated"],
+      "@types": ["./src/types"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "./components.d.ts"],

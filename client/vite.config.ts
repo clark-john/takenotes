@@ -12,7 +12,7 @@ export default defineConfig({
 			vueTsc: true,
 			typescript: true,
 			eslint: {
-				lintCommand: "eslint ./src/**/*.{vue,ts}"
+				lintCommand: 'eslint ./src/**/*.{vue,ts}'
 			}
 		}),
 		unplugin({
@@ -22,13 +22,16 @@ export default defineConfig({
 	resolve: {
 		alias: [
 			{
-				find: "@stores",
-				replacement: resolve(__dirname, "./src/stores"),
-				
+				find: '@stores',
+				replacement: resolve(__dirname, './src/stores')
 			},
 			{
-				find: "@generated",
-				replacement: resolve(__dirname, "src/generated.ts")
+				find: '@generated',
+				replacement: resolve(__dirname, 'src/generated.ts')
+			},
+			{
+				find: '@types',
+				replacement: resolve(__dirname, 'src/types')
 			}
 		]
 	}

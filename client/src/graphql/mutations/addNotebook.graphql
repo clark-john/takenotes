@@ -1,0 +1,14 @@
+mutation AddNotebook($name: String!, $description: String!) {
+	createNotebook(notebook: {
+		name: $name
+		description: $description	
+	}) {
+		id
+		name
+		description
+		createdAt
+		# photoId
+		backgroundColor
+		userId
+	}
+}

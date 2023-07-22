@@ -1,5 +1,6 @@
 <template>
-	<div>dksmf
+	<div>
+		dksmf
 		<router-link to="/">dd</router-link>
 	</div>
 </template>

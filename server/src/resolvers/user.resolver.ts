@@ -27,8 +27,7 @@ export class UserResolver {
 	async login(
 		@Args('login') { username, password }: Login,
 		@Context() ctx: any
-	): Promise<AccessToken> {
-		const res = ctx.res as Response;
+	) {
 		let user = (await UserBase.fetch({ username })).items.find(
 			x => x.username === username
 		) as UserWithPassword & DetaObject;
@@ -47,14 +46,14 @@ export class UserResolver {
 		}
 
 		const accessToken = this.getAccessToken(payload);
-		// const refreshToken = this.getRefreshToken(payload);
+		const refreshToken = this.getRefreshToken(payload);
 
-		// this.sendRTCookie(res, refreshToken);
+		this.sendRTCookie(ctx.res as Response, refreshToken);
 
 		return {
 			accessToken,
-			user: userReturn
-		};
+			user: keyToId(user)			
+		}
 	}
 
 	/**
@@ -64,7 +63,7 @@ export class UserResolver {
 	async register(
 		@Args('register') register: Register,
 		@Context() ctx: any
-	): Promise<AccessToken> {
+	): Promise<AccessToken> {	
 		const res = ctx.res as Response;
 		const args = register as Register & DetaObject;
 		args.createdAt = new Date();
@@ -90,8 +89,8 @@ export class UserResolver {
 
 		return {
 			accessToken,
-			user
-		};
+			user			
+		}
 	}
 
 	/**
@@ -117,7 +116,7 @@ export class UserResolver {
 		});
 	}
 	private getRefreshToken(payload: any) {
-		payload.exp = this.getExpInMinutes(20);
+		payload.exp = this.getExpInMinutes(60);
 		return this.jwt.sign(payload, {
 			secret: this.config.get("JWT_REFRESH_SECRET")
 		});
@@ -130,9 +129,7 @@ export class UserResolver {
 	private sendRTCookie(res: Response, token: string){
 		res.cookie("token", token, {
 			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
-			expires: new Date(this.getExpInMinutes(20) * 1000)
+			expires: new Date(this.getExpInMinutes(60) * 1000)
 		});
 	}
 

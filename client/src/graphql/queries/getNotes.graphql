@@ -1,0 +1,11 @@
+query GetNotes($id: String!) {
+	getNotes(notebookId: $id) {
+		id
+	  title
+	  content
+	  backgroundColor
+	  notebookId
+	  userId
+	  createdAt
+	}
+}

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { useQuery } from "@urql/vue";
-import { MeDoc //, MeQuery 
+import { useQuery } from '@urql/vue';
+import {
+	MeDoc //, MeQuery
 } from '@generated';
 
 const { data, fetching } = useQuery({ query: MeDoc });
@@ -9,19 +10,17 @@ const { data, fetching } = useQuery({ query: MeDoc });
 <template>
 	<nav>
 		<div class="title">
-			<img src="/favicon.svg" alt="" height="30">
+			<img src="/favicon.svg" alt="" height="30" />
 			TakeNotes
 		</div>
 		<div v-if="data">
 			{{ data?.me?.firstName }}
 		</div>
-		<div v-else-if="fetching">
-			Loading user...
-		</div>
+		<div v-else-if="fetching">Loading user...</div>
 	</nav>
 </template>
 <style lang="scss" scoped>
-@use "../colors" as *;
+@use '../colors' as *;
 
 nav {
 	.title {

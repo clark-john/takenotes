@@ -9,3 +9,11 @@ export const CurrentUserId = createParamDecorator(
 		return req.user.sub;
 	}
 );
+
+export const Cookies = createParamDecorator(
+	(_data: any, ctx: ExecutionContext) => {
+		const context = GqlExecutionContext.create(ctx);
+		const req = context.getContext().req as Request;
+		return req.cookies;
+	}
+);

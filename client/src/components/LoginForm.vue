@@ -20,7 +20,7 @@ const loginValue = ref({
 const { executeMutation: loginUser } = useMutation(LoginDoc);
 
 const rules: FormRules = {
-	username:	{
+	username: {
 		required: true
 	},
 	password: {
@@ -28,27 +28,34 @@ const rules: FormRules = {
 	}
 };
 
-function login(){
+function login() {
 	formRef.value?.validate(errs => {
 		if (!errs) {
 			loading.start();
-			loginUser(loginValue.value as LoginMutationVariables).then(async result => {
-				const errorMessage = removeGraphqlBracket(result.error?.message ?? '');
-				if (errorMessage) {
-					loading.error();
-					message.error(errorMessage, { duration: 1500 });
-				} else {
-					localStorage.setItem("token", (result.data as LoginMutation).login.accessToken);
-					setTimeout(() => {
+			loginUser(loginValue.value as LoginMutationVariables).then(
+				async result => {
+					const errorMessage = removeGraphqlBracket(
+						result.error?.message ?? ''
+					);
+					if (errorMessage) {
+						loading.error();
+						message.error(errorMessage, { duration: 1500 });
+					} else {
+						if (localStorage.getItem('token')) {
+							localStorage.removeItem('token');
+						}
+						localStorage.setItem(
+							'token',
+							(result.data as LoginMutation).login.accessToken
+						);
 						loading.finish();
-						router.push("/");
-					}, 100);
+						router.push('/');
+					}
 				}
-			});
+			);
 		}
 	});
 }
-
 </script>
 
 <template>
@@ -56,14 +63,31 @@ function login(){
 		<template #header>
 			<span class="login">Login</span>
 		</template>
-		<n-form ref="formRef" :model="loginValue" size="medium" :rules="rules" :show-require-mark="false">
+		<n-form
+			ref="formRef"
+			:model="loginValue"
+			size="medium"
+			:rules="rules"
+			:show-require-mark="false"
+		>
 			<n-form-item label="Username" path="username">
-				<n-input size="large" placeholder="Enter username" v-model:value="loginValue.username" />					
+				<n-input
+					size="large"
+					placeholder="Enter username"
+					v-model:value="loginValue.username"
+				/>
 			</n-form-item>
 			<n-form-item label="Password" path="password">
-				<n-input size="large" type="password" placeholder="Enter password" v-model:value="loginValue.password" />
+				<n-input
+					size="large"
+					type="password"
+					placeholder="Enter password"
+					v-model:value="loginValue.password"
+				/>
 			</n-form-item>
-			<n-button type="primary" round class="button" @click="login">Login</n-button>
+			<n-button type="primary" round class="button" @click="login"
+				>Login</n-button
+			>
 			<div class="signup">Don't have one? <span>Create yours</span></div>
 		</n-form>
 	</n-card>
@@ -87,7 +111,7 @@ function login(){
 			transition: filter 150ms ease-in-out;
 			&:hover {
 				cursor: pointer;
-				filter: brightness(.7);
+				filter: brightness(0.7);
 			}
 		}
 	}

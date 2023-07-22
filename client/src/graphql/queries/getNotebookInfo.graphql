@@ -1,0 +1,7 @@
+query GetNotebookInfo($id: String!) {
+	getNotebookInfo(id: $id) {
+		name
+		description
+		userId
+	}
+}

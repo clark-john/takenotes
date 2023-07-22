@@ -1438,6 +1438,14 @@
     "@urql/core" ">=4.0.0"
     wonka "^6.3.2"
 
+"@urql/exchange-retry@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@urql/exchange-retry/-/exchange-retry-1.2.0.tgz#23d3ec711754e3c67a843e0106f2cabddff2e5ff"
+  integrity sha512-1O/biKiVhhn0EtvDF4UOvz325K4RrLupfL8rHcmqD2TBLv4qVDWQuzx4JGa1FfqjjRb+C9TNZ6w19f32Mq85Ug==
+  dependencies:
+    "@urql/core" ">=4.0.0"
+    wonka "^6.3.2"
+
 "@urql/vue@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@urql/vue/-/vue-1.1.2.tgz#9456f1b4a16b6a4c77546d290c54cc4f04288ac9"
@@ -3040,6 +3048,11 @@ jsonify@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.1.tgz#2aa3111dae3d34a0f151c63f3a45d995d9420978"
   integrity sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==
+
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 levn@^0.4.1:
   version "0.4.1"

@@ -50,7 +50,6 @@ export class IsAuthMiddleware implements NestMiddleware {
 					});
 					req['user'] = payload;
 				} catch (e) {
-					console.log(e)
 					throw new UnauthorizedException(e);
 				}
 			}

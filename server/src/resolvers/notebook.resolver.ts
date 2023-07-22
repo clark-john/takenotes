@@ -38,6 +38,14 @@ export class NotebookResolver {
 		});
 	}
 
+	@Query(() => Notebook, { nullable: true })
+	async getNotebookInfo(@Args("id", { type: () => String }) id: string){
+		const k = await NotebookBase.get(id);
+		const nb = keyToId(k) as Notebook;
+		set(nb, 'createdAt', new Date(nb.createdAt))
+		return nb;
+	}
+
 	@Mutation(() => Notebook)
 	async createNotebook(
 		@CurrentUserId() userId: string,
