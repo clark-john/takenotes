@@ -1,0 +1,7 @@
+mutation UpdateNote($content: String, $id: ID!, $backgroundColor: String) {
+  updateNote(note: {
+    content: $content
+    backgroundColor: $backgroundColor,
+    id: $id
+  })
+}

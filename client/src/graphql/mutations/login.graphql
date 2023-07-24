@@ -3,13 +3,6 @@ mutation Login($username: String!, $password: String!) {
 		username: $username
 		password: $password
 	}) {
-		accessToken
-		user {
-			id
-			firstName
-			lastName
-			username
-			createdAt
-		}
+		...SignedIn
 	}
 }

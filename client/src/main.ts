@@ -1,12 +1,11 @@
 import { createApp } from 'vue';
 import urql, { cacheExchange, fetchExchange } from '@urql/vue';
-import { retryExchange } from '@urql/exchange-retry';
 import { createPinia } from 'pinia';
 import { Router } from 'vue-router';
 import './style.scss';
 import App from './App.vue';
 import router from './router';
-import { auth } from './exchanges';
+import { auth, retry } from './exchanges';
 
 const { VITE_SERVER_URL, DEV } = import.meta.env;
 
@@ -47,21 +46,17 @@ const app = createApp(App)
 	.use(urql, {
 		url: baseUrl + '/graphql',
 		exchanges: [
-			cacheExchange, 
+			cacheExchange,
 			auth(baseUrl, router),
-			retryExchange({
-				initialDelayMs: 1000,
-				maxDelayMs: 5000,
-				randomDelay: true,
-				maxNumberAttempts: 2
-			}),
+			retry,
 			fetchExchange
 		],
 		fetchOptions() {
 			return {
 				credentials: 'include'
 			};
-		}
+		},
+		requestPolicy: 'cache-and-network'
 	});
 
 app.config.performance = true;

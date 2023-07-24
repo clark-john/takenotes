@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException, Res } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -15,6 +15,7 @@ import {
 import { UserBase } from 'src/bases';
 import { DetaObject } from 'src/types';
 import { keyToId } from 'src/utils';
+import { Cookies } from 'src/decorators';
 
 @Resolver()
 export class UserResolver {
@@ -91,6 +92,14 @@ export class UserResolver {
 			accessToken,
 			user			
 		}
+	}
+
+	@Mutation(() => String)
+	async logout(@Cookies() cookies: { token: string }, @Context() ctx: { res: Response }){
+		if (cookies.token) {
+			ctx.res.clearCookie("token");
+		}
+		return "logged out";
 	}
 
 	/**

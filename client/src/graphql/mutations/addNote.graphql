@@ -1,19 +1,11 @@
 mutation AddNote(
-	$title: String!
   $content: String!
   $notebookId: ID!
 ) {
 	createNote(note: {
-		title: $title
 		content: $content
 		notebookId: $notebookId
 	}) {
-		id
-		title
-		content
-		backgroundColor
-		notebookId
-		userId
-		createdAt
+		...NoteInfo
 	}
 }

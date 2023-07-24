@@ -2,9 +2,9 @@
 import { useNotebook } from '@stores/notebookStore';
 import { NotebookInput } from '@types';
 import { FormInst, FormRules, useDialog } from 'naive-ui';
-import { Ref, ref } from 'vue';
+import { ref } from 'vue';
 import { AddNotebook, AddNotebookMutation } from '@generated';
-import { clearValues } from '../utils';
+import { addAntiSpecialChars, clearValues } from '../utils';
 
 const p = defineProps<{
 	show: boolean;
@@ -17,16 +17,20 @@ const emitter = defineEmits<{
 const formRef = ref<FormInst | null>(null);
 const dialog = useDialog();
 
-const notebookValue: Ref<NotebookInput> = ref({
+const notebookValue = ref<NotebookInput>({
 	name: '',
 	description: ''
 });
 
 const rules: FormRules = {
-	name: {
-		required: true
-	}
+	name: [
+		{
+			required: true
+		}
+	]
 };
+
+addAntiSpecialChars(rules);
 
 const { addNotebook } = useNotebook();
 
@@ -57,6 +61,7 @@ function create() {
 		size="large"
 		@esc="() => emitter('close')"
 		@mask-click="() => emitter('close')"
+		@close="emitter('close')"
 	>
 		<template #header> Add Notebook </template>
 		<n-form ref="formRef" size="medium" :model="notebookValue" :rules="rules">

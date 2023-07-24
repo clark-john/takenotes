@@ -1,7 +1,7 @@
 {
   "name": "client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,21 +17,24 @@
     "@urql/exchange-auth": "^2.1.4",
     "@urql/exchange-retry": "^1.2.0",
     "@urql/vue": "^1.1.2",
-    "dompurify": "^3.0.5",
     "graphql": "^16.7.1",
     "jwt-decode": "^3.1.2",
+    "lodash.throttle": "^4.1.1",
     "marked": "^5.1.1",
     "pinia": "^2.1.4",
+    "uuid": "^9.0.0",
     "vue": "^3.2.47",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.4",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-document-nodes": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@types/dompurify": "^3.0.2",
+    "@types/lodash.throttle": "^4.1.7",
     "@types/marked": "^5.0.0",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vicons/fa": "^0.12.0",

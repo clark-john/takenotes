@@ -1,0 +1,8 @@
+fragment NoteInfo on Note {
+	id
+	content
+	backgroundColor
+	notebookId
+	userId
+	createdAt
+}

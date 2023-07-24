@@ -22,8 +22,11 @@ export class NotebookResolver {
 	@Query(() => [Note])
 	async getNotes(
 		@Args('notebookId', { type: () => String }) id: string
-	): Notes {
-		return (await NoteBase.fetch({ notebookId: id })).items as NoteType[];
+	) {
+		return (await NoteBase.fetch({ notebookId: id })).items.map(x => {
+			x.createdAt = new Date(x.createdAt as string) as any;
+			return keyToId(x);
+		});
 	}
 
 	@Query(() => [Notebook])

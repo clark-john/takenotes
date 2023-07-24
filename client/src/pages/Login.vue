@@ -7,6 +7,7 @@ const store = useTheme();
 const { setTheme, theme } = store;
 
 const active = ref<boolean>(theme === 'dark');
+const isLogin = ref(true);
 
 function handleUpdate(ev: boolean) {
 	setTheme(ev ? 'dark' : 'light');
@@ -20,7 +21,8 @@ function handleUpdate(ev: boolean) {
 			<img src="/notebooks.svg" alt="notebooks" height="700" />
 		</div>
 		<div class="login">
-			<LoginForm />
+			<LoginForm @register-form="isLogin = false" v-if="isLogin" />
+			<RegisterForm v-else @login-form="isLogin = true" />
 		</div>
 		<div class="switch">
 			<n-switch
@@ -44,8 +46,6 @@ function handleUpdate(ev: boolean) {
 		}
 		display: grid;
 		justify-items: center;
-	}
-	.login {
 	}
 	display: flex;
 	justify-content: space-evenly;

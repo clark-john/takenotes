@@ -17,7 +17,6 @@ type AccessToken {
 
 type Note {
   id: ID!
-  title: String!
   content: String!
   backgroundColor: String!
   notebookId: ID!
@@ -45,14 +44,17 @@ type Query {
   getNotes(notebookId: String!): [Note!]!
   getNotebooks: [Notebook!]!
   getNotebookInfo(id: String!): Notebook
+  getNote(id: String!): Note
 }
 
 type Mutation {
   login(login: Login!): AccessToken!
   register(register: Register!): AccessToken!
+  logout: String!
   createNotebook(notebook: AddNotebook!): Notebook!
   deleteNotebook(id: String!): Notebook!
   createNote(note: AddNote!): Note!
+  createBlankNote(notebookId: String!): Note!
   updateNote(note: UpdateNote!): String!
   deleteNote(id: String!): Note!
 }
@@ -78,14 +80,12 @@ input AddNotebook {
 }
 
 input AddNote {
-  title: String!
   content: String!
   notebookId: ID!
   backgroundColor: String
 }
 
 input UpdateNote {
-  title: String
   content: String
   backgroundColor: String
   id: ID!

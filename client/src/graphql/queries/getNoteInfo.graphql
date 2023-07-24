@@ -1,0 +1,5 @@
+query GetNoteInfo($id: String!) {
+  getNote(id: $id){
+    ...NoteInfo
+  }
+}

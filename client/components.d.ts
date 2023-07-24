@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CenteredSpin: typeof import('./src/components/CenteredSpin.vue')['default']
     CreateNotebookModal: typeof import('./src/components/CreateNotebookModal.vue')['default']
     LoginForm: typeof import('./src/components/LoginForm.vue')['default']
     Navbar: typeof import('./src/components/Navbar.vue')['default']
@@ -17,12 +18,15 @@ declare module 'vue' {
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
+    NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
     NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']
     NLoadingProvider: typeof import('naive-ui')['NLoadingProvider']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NModal: typeof import('naive-ui')['NModal']
+    Note: typeof import('./src/components/Note.vue')['default']
     Notebook: typeof import('./src/components/Notebook.vue')['default']
+    NotesTopPart: typeof import('./src/components/NotesTopPart.vue')['default']
     NSpin: typeof import('naive-ui')['NSpin']
     NSwitch: typeof import('naive-ui')['NSwitch']
     PaddingWrapper: typeof import('./src/components/PaddingWrapper.vue')['default']

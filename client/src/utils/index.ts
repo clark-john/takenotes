@@ -1,7 +1,7 @@
-import { Router } from 'vue-router';
-import { discreteApi } from './discreteApi';
+import { filterXSS, whiteList } from 'xss';
 
-export * from './emitStorageEvent';
+export { addAntiSpecialChars } from './antiSpecialChars';
+export { launchSessionErrorDialog } from './sessionErrDialog';
 
 export function removeGraphqlBracket(message: string) {
 	return message.replace(/\[GraphQL\]\s*/, '');
@@ -14,31 +14,16 @@ export function clearValues(obj: any): any {
 	return obj;
 }
 
-const dcapi = discreteApi();
-
-export const launchSessionErrorDialog = (() => {
-	let exec = false;
-	return (router: Router) => {
-		if (!exec) {
-			dcapi.dialog.error({
-				title: 'Error',
-				content: 'Session expired. Please relogin.',
-				closable: false,
-				onEsc() {
-					return false;
-				},
-				onMaskClick(_e: any) {
-					return false;
-				},
-				onPositiveClick(_e: any) {
-					router.push('/login').then(() => {
-						console.clear();
-						localStorage.removeItem('token');
-					});
-				},
-				positiveText: 'Ok'
-			});
-			exec = true;
+export const xss = (content: string) => {
+	return filterXSS(content, { 
+		whiteList: {
+			...whiteList,
+			input: ['disabled', 'checked', 'type'] 
+		},
+		onTagAttr: (_tag, name, value, _isWhiteAttr) => {
+			if (name === 'type' && value !== 'checkbox') {
+				return "style='display: none'";
+			}
 		}
-	};
-})();
+	});
+}

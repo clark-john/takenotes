@@ -1,19 +1,23 @@
 <script lang="ts" setup>
-import { GetNotebooksQuery } from '@generated';
+import {
+	GetNotebooksQuery,
+	GetNotebooksQueryVariables,
+	Note
+} from '@generated';
 import { useNotebook } from '@stores/notebookStore';
 import { ref } from 'vue';
-// import { useSessionErrorDialog } from '../composables';
+import { UseQueryResponse } from '@urql/vue';
 
 const { getNotebooks } = useNotebook();
 
-const { data, fetching } = getNotebooks();
-// alert(document.body.clientWidth)
-const show = ref(false);
+const { data, fetching } = getNotebooks() as UseQueryResponse<
+	GetNotebooksQuery,
+	GetNotebooksQueryVariables
+>;
 
-// useSessionErrorDialog(error, router => {
-// 	router.push("/login");
-// })
+const show = ref(false);
 </script>
+
 <template>
 	<div class="main">
 		<div class="title">
@@ -21,27 +25,28 @@ const show = ref(false);
 			<n-button @click="show = !show" type="primary"> Create </n-button>
 		</div>
 		<div v-if="data">
-			<div class="container">
+			<div class="container" v-if="data.getNotebooks.length">
+				<!-- @vue-ignore -->
 				<Notebook
-					v-for="x of (data as GetNotebooksQuery).getNotebooks"
-					:key="(data as GetNotebooksQuery).getNotebooks.indexOf(x) + 1"
-					:bg="x.backgroundColor || ''"
-					:name="x.name || ''"
-					:id="x.id || ''"
+					v-for="x of data.getNotebooks.toSorted((a: Note, b: Note) => {
+						return a.createdAt < b.createdAt ? 1 : -1;
+					})"
+					:key="x.id"
+					:bg="x.backgroundColor"
+					:name="x.name"
+					:id="x.id"
 				/>
 			</div>
+			<div v-else class="no-notebooks">You current don't have notebooks</div>
 		</div>
 		<div v-else-if="fetching">
-			<n-spin class="spin" />
+			<CenteredSpin text="Loading your notebooks" />
 		</div>
 	</div>
 	<CreateNotebookModal :show="show" @close="show = false" />
 </template>
-<style lang="scss" scoped>
-@function templateCols($number) {
-	@return repeat($number, calc(100% / $number));
-}
 
+<style lang="scss" scoped>
 .main {
 	margin-top: 10px;
 	.title {
@@ -69,5 +74,10 @@ const show = ref(false);
 		grid-template-columns: repeat(auto-fit, 200px);
 		column-gap: 3rem;
 	}
+}
+.no-notebooks {
+	margin-block: 4rem;
+	text-align: center;
+	color: #888;
 }
 </style>

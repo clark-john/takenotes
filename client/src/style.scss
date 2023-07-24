@@ -4,7 +4,9 @@
 @import url('https://fonts.cdnfonts.com/css/trial-rooftop');
 
 * {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  &:not(pre, code) {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
   box-sizing: border-box;
 }
 
@@ -43,6 +45,10 @@ body {
   transition: addTrans(background-color), addTrans(color);
 }
 
+a {
+  color: #fff;
+}
+
 $scrollbar: "::-webkit-scrollbar";
 // $thumb-color: 
 
@@ -61,3 +67,7 @@ $scrollbar: "::-webkit-scrollbar";
   color: #fff;
 }
 
+ul:has(li input[type=checkbox]) {
+  padding-inline-start: 16px;
+  list-style: none;
+}

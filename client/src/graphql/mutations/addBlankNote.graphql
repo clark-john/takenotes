@@ -1,0 +1,5 @@
+mutation AddBlankNote($id: String!) {
+	createBlankNote(notebookId: $id){
+		...NoteInfo
+	}
+}

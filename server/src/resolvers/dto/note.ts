@@ -6,9 +6,6 @@ export class Note {
 	id: string;
 
 	@Field(() => String)
-	title: string;
-
-	@Field(() => String)
 	content: string;
 
 	@Field(() => String)
@@ -26,9 +23,6 @@ export class Note {
 
 @InputType()
 export class AddNote {
-	@Field(() => String)
-	title: string;
-
 	@Field(() => String)
 	content: string;
 

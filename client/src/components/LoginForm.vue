@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { FormInst, FormRules, useMessage, useLoadingBar } from 'naive-ui';
 import { useMutation } from '@urql/vue';
 import { LoginDoc, LoginMutationVariables, LoginMutation } from '@generated';
-import { removeGraphqlBracket } from '../utils';
+import { addAntiSpecialChars, removeGraphqlBracket } from '../utils';
 
 const message = useMessage();
 const loading = useLoadingBar();
@@ -20,13 +20,23 @@ const loginValue = ref({
 const { executeMutation: loginUser } = useMutation(LoginDoc);
 
 const rules: FormRules = {
-	username: {
-		required: true
-	},
-	password: {
-		required: true
-	}
+	username: [
+		{
+			required: true
+		}
+	],
+	password: [
+		{
+			required: true
+		}
+	]
 };
+
+addAntiSpecialChars(rules);
+
+const emit = defineEmits<{
+	(e: 'registerForm'): void;
+}>();
 
 function login() {
 	formRef.value?.validate(errs => {
@@ -85,10 +95,26 @@ function login() {
 					v-model:value="loginValue.password"
 				/>
 			</n-form-item>
-			<n-button type="primary" round class="button" @click="login"
-				>Login</n-button
+			<!-- prettier-ignore -->
+			<n-button 
+				type="primary" 
+				round 
+				class="button" 
+				@click="login"
 			>
-			<div class="signup">Don't have one? <span>Create yours</span></div>
+				Login
+			</n-button>
+			<div class="signup">
+				Don't have one?
+				<span
+					@click="
+						() => {
+							emit('registerForm');
+						}
+					"
+					>Create yours</span
+				>
+			</div>
 		</n-form>
 	</n-card>
 </template>

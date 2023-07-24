@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 /* eslint-disable vue/no-setup-props-destructure */
-const { bg, name, id } = defineProps<{
+const { id } = defineProps<{
 	bg: string;
 	name: string;
 	id: string;
@@ -38,8 +38,6 @@ $radius: 7px;
 	}
 	display: grid;
 	row-gap: 9px;
-	// justify-content: center;
-	// align-items: center;
 	justify-items: center;
 }
 </style>

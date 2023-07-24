@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
 	value: string;
 }>();
 </script>
 <template>
-	<div :style="{ padding: props.value }">
+	<div :style="{ padding: value }">
 		<slot />
 	</div>
 </template>

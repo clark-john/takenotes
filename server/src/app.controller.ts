@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { omit } from 'lodash';
@@ -27,20 +27,18 @@ export class AppController {
 	refreshToken(@Cookies() cookies: { token: string }){
 		const rtoken = cookies.token;
 		if (!rtoken) {
-			return {
-				accessToken: ''
-			}
+			throw new UnauthorizedException("No refresh token");
 		}
 		try {
 			const payload: Payload = this.jwt.verify(rtoken, { secret: this.config.get("JWT_REFRESH_SECRET") });
-			return { accessToken: this.jwt.sign(omit(payload, ['iat', 'exp']), {
-				secret: this.config.get("JWT_ACCESS_SECRET"),
-				expiresIn: Math.trunc(Date.now() / 1000) + (60 * 10)
-			})};
+			return { 
+				accessToken: this.jwt.sign(omit(payload, ['iat', 'exp']), {
+					secret: this.config.get("JWT_ACCESS_SECRET"),
+					expiresIn: 600,
+				})
+			};
 		} catch (e) {
-			return {
-				accessToken: ''
-			}
+			throw new UnauthorizedException("Expired token");
 		}
 	}
 }
