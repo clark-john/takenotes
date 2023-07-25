@@ -1,10 +1,6 @@
 fragment SignedIn on AccessToken {
 	accessToken
 	user {
-		id
-		firstName
-		lastName
-		username
-		createdAt
+		...UserReturn
 	}
 }

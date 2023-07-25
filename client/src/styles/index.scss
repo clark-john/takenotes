@@ -1,0 +1,6 @@
+@forward "colors";
+
+@function addTrans($prop){
+  // bezier value from Naive UI
+  @return #{$prop} 300ms cubic-bezier(.4, 0, .2, 1);
+}

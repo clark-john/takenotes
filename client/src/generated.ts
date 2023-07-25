@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@urql/vue';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -31,7 +31,6 @@ export type AddNote = {
 export type AddNotebook = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  photoFilename?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Login = {
@@ -50,6 +49,7 @@ export type Mutation = {
   logout: Scalars['String']['output'];
   register: AccessToken;
   updateNote: Scalars['String']['output'];
+  updateNotebook: Notebook;
 };
 
 
@@ -90,6 +90,11 @@ export type MutationRegisterArgs = {
 
 export type MutationUpdateNoteArgs = {
   note: UpdateNote;
+};
+
+
+export type MutationUpdateNotebookArgs = {
+  notebook: UpdateNotebook;
 };
 
 export type Note = {
@@ -152,6 +157,12 @@ export type UpdateNote = {
   id: Scalars['ID']['input'];
 };
 
+export type UpdateNotebook = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type User = {
   __typename?: 'User';
   createdAt?: Maybe<Scalars['String']['output']>;
@@ -164,6 +175,8 @@ export type User = {
 export type NoteInfoFragment = { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, createdAt: any };
 
 export type SignedInFragment = { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } };
+
+export type UserReturnFragment = { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null };
 
 export type AddBlankNoteMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -210,6 +223,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } } };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
 export type RegisterMutationVariables = Exact<{
   firstName: Scalars['String']['input'];
   lastName?: InputMaybe<Scalars['String']['input']>;
@@ -228,6 +246,15 @@ export type UpdateNoteMutationVariables = Exact<{
 
 
 export type UpdateNoteMutation = { __typename?: 'Mutation', updateNote: string };
+
+export type UpdateNotebookMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateNotebookMutation = { __typename?: 'Mutation', updateNotebook: { __typename?: 'Notebook', id: string, name: string, description: string } };
 
 export type GetNoteInfoQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -270,18 +297,23 @@ export const NoteInfo = gql`
   createdAt
 }
     `;
+export const UserReturn = gql`
+    fragment UserReturn on User {
+  id
+  firstName
+  lastName
+  username
+  createdAt
+}
+    `;
 export const SignedIn = gql`
     fragment SignedIn on AccessToken {
   accessToken
   user {
-    id
-    firstName
-    lastName
-    username
-    createdAt
+    ...UserReturn
   }
 }
-    `;
+    ${UserReturn}`;
 export const AddBlankNoteDoc = gql`
     mutation AddBlankNote($id: String!) {
   createBlankNote(notebookId: $id) {
@@ -330,6 +362,11 @@ export const LoginDoc = gql`
   }
 }
     ${SignedIn}`;
+export const LogoutDoc = gql`
+    mutation Logout {
+  logout
+}
+    `;
 export const RegisterDoc = gql`
     mutation Register($firstName: String!, $lastName: String, $username: String!, $password: String!) {
   register(
@@ -344,6 +381,15 @@ export const UpdateNoteDoc = gql`
   updateNote(
     note: {content: $content, backgroundColor: $backgroundColor, id: $id}
   )
+}
+    `;
+export const UpdateNotebookDoc = gql`
+    mutation UpdateNotebook($id: ID!, $name: String, $description: String) {
+  updateNotebook(notebook: {id: $id, name: $name, description: $description}) {
+    id
+    name
+    description
+  }
 }
     `;
 export const GetNoteInfoDoc = gql`
@@ -384,11 +430,7 @@ export const GetNotesDoc = gql`
 export const MeDoc = gql`
     query Me {
   me {
-    id
-    firstName
-    lastName
-    username
-    createdAt
+    ...UserReturn
   }
 }
-    `;
+    ${UserReturn}`;

@@ -18,6 +18,11 @@ function checkTheme() {
 
 onMounted(() => {
 	checkTheme();
+	
+	/* if (!localStorage.getItem("prefer-color-notes")) {
+		localStorage.setItem("prefer-color-notes", "true");
+	} */
+
 	window.addEventListener('setTheme', (ev: Event) => {
 		localStorage.setItem('theme', (ev as CustomEvent).detail);
 		checkTheme();

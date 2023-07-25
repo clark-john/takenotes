@@ -2,6 +2,7 @@ import { filterXSS, whiteList } from 'xss';
 
 export { addAntiSpecialChars } from './antiSpecialChars';
 export { launchSessionErrorDialog } from './sessionErrDialog';
+export { marked } from './marked';
 
 export function removeGraphqlBracket(message: string) {
 	return message.replace(/\[GraphQL\]\s*/, '');
@@ -18,7 +19,8 @@ export const xss = (content: string) => {
 	return filterXSS(content, { 
 		whiteList: {
 			...whiteList,
-			input: ['disabled', 'checked', 'type'] 
+			input: ['disabled', 'checked', 'type'],
+			span: ['class']
 		},
 		onTagAttr: (_tag, name, value, _isWhiteAttr) => {
 			if (name === 'type' && value !== 'checkbox') {
@@ -26,4 +28,4 @@ export const xss = (content: string) => {
 			}
 		}
 	});
-}
+};

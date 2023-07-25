@@ -118,14 +118,15 @@ export class UserResolver {
 	): Omit<Record<string, any>, 'actualPassword' | 'password'> {
 		return omit(obj, ['actualPassword', 'password']);
 	}
+	
 	private getAccessToken(payload: any) {
-		payload.exp = this.getExpInMinutes(10);
+		payload.exp = this.getExpInMinutes(30);
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_ACCESS_SECRET')
 		});
 	}
 	private getRefreshToken(payload: any) {
-		payload.exp = this.getExpInMinutes(60);
+		payload.exp = this.getExpInMinutes(90);
 		return this.jwt.sign(payload, {
 			secret: this.config.get("JWT_REFRESH_SECRET")
 		});

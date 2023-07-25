@@ -3,7 +3,6 @@ import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 import MainLayout from './layouts/MainLayout.vue';
 
 const routes: RouteRecordRaw[] = [
-	// some routes would have
 	{
 		path: '',
 		component: h(MainLayout, { withNavbar: true }),
@@ -19,10 +18,13 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: "note/:notebookId/:id",
 				component: () => import('./pages/NoteEditor.vue')
+			},
+			{
+				path: "settings",
+				component: () => import('./pages/Settings.vue')
 			}
 		]
 	},
-	// login has no navbar
 	{
 		path: '',
 		component: h(MainLayout, { withNavbar: false }),

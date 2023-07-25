@@ -1,0 +1,7 @@
+fragment UserReturn on User {
+  id
+  firstName
+  lastName
+  username
+  createdAt
+}

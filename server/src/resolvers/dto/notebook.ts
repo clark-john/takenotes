@@ -3,8 +3,10 @@ import {
 	GraphQLISODateTime,
 	ID,
 	InputType,
-	ObjectType
+	ObjectType,
+	PartialType
 } from '@nestjs/graphql';
+import { AddNote } from './note';
 
 @ObjectType()
 export class Notebook {
@@ -35,6 +37,12 @@ export class AddNotebook {
 	@Field(() => String)
 	description: string;
 
-	@Field(() => String, { nullable: true })
-	photoFilename?: string;
+	// @Field(() => String, { nullable: true })
+	// photoFilename?: string;
+}
+
+@InputType()
+export class UpdateNotebook extends PartialType(AddNotebook) {
+	@Field(() => ID)
+	id: string;
 }

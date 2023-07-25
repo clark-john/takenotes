@@ -3,6 +3,7 @@ import urql, { cacheExchange, fetchExchange } from '@urql/vue';
 import { createPinia } from 'pinia';
 import { Router } from 'vue-router';
 import './style.scss';
+import 'highlight.js/styles/default.css';
 import App from './App.vue';
 import router from './router';
 import { auth, retry } from './exchanges';
@@ -47,8 +48,8 @@ const app = createApp(App)
 		url: baseUrl + '/graphql',
 		exchanges: [
 			cacheExchange,
-			auth(baseUrl, router),
 			retry,
+			auth(baseUrl, router),
 			fetchExchange
 		],
 		fetchOptions() {

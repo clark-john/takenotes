@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { useNote } from '@stores';
-import { ChevronLeft } from '@vicons/fa';
+import { ChevronBack } from '@vicons/ionicons5';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import { marked } from 'marked';
 import throttle from 'lodash.throttle';
-import { xss } from '../utils';
+import { xss, marked } from '../utils';
 
-const m = marked.setOptions({ mangle: false, headerIds: false });
 const note = ref({
   content: ''
 });
@@ -35,7 +33,7 @@ const executeUpdate = throttle(() => {
     isSaved.value = true;
     isUpdating.value = false;
   });
-}, 1500)
+}, 1250);
 
 function runThrottled(){
   isUpdating.value = true;
@@ -47,8 +45,8 @@ function runThrottled(){
   <div class="main">
     <div class="top">
       <router-link :to="'/notes/' + route.params.notebookId">
-        <n-icon size="30">
-          <ChevronLeft />
+        <n-icon size="40">
+          <ChevronBack />
         </n-icon>
       </router-link>
       <n-button @click="isPreview = !isPreview">Toggle Markdown Preview</n-button>
@@ -72,7 +70,7 @@ function runThrottled(){
       <div 
         class="markdown" 
         :style="{ backgroundColor: data?.getNote?.backgroundColor, display: isPreview ? '' : 'none' }" 
-        v-html="xss(m.parse(note.content))"
+        v-html="xss(marked.parse(note.content))"
       >
       </div>
     </div>

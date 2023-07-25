@@ -7,8 +7,7 @@ import { NotebookService } from 'src/services/notebook.service';
 import { CurrentUserId } from 'src/decorators';
 import { NoteBase } from 'src/bases';
 import { DetaObject } from 'src/types';
-import { keyToId } from 'src/utils';
-import { keys, unset } from 'lodash';
+import { keyToId, removeEmpty } from 'src/utils';
 
 @Resolver()
 export class NoteResolver {
@@ -66,7 +65,7 @@ export class NoteResolver {
 		@Args('note') { backgroundColor, content, id }: UpdateNote
 	) {
 		const note = await this.findOne(currentId, id);
-		const updates = this.removeEmpty({
+		const updates = removeEmpty({
 			content,
 			backgroundColor
 		});
@@ -101,13 +100,5 @@ export class NoteResolver {
 			throw new NotFoundException("Note not found");
 		}
 		return note;
-	}
-	private removeEmpty(obj: Record<string, any>){
-		keys(obj).forEach(x => {
-			if (!obj[x]) {
-				unset(obj, x);
-			}
-		});
-		return obj;
 	}
 }

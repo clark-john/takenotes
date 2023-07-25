@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { useQuery } from '@urql/vue';
-import {
-	MeDoc //, MeQuery
-} from '@generated';
+import { useUser } from '@stores';
 
-const { data, fetching } = useQuery({ query: MeDoc });
+const { getCurrent } = useUser();
+
+const { data, fetching } = getCurrent();
 </script>
 
 <template>
@@ -13,14 +12,15 @@ const { data, fetching } = useQuery({ query: MeDoc });
 			<img src="/favicon.svg" alt="" height="30" />
 			TakeNotes
 		</div>
-		<div v-if="data">
-			{{ data?.me?.firstName }}
+		<div v-if="data" class="data">
+			<ProfileMenu :name="data.me.firstName" />
 		</div>
 		<div v-else-if="fetching">Loading user...</div>
 	</nav>
 </template>
+
 <style lang="scss" scoped>
-@use '../colors' as *;
+@use 'styles' as *;
 
 nav {
 	.title {
@@ -34,6 +34,20 @@ nav {
 	align-items: center;
 	padding: 10px 20px;
 	justify-content: space-between;
-	background-color: darken($dark-bg-color, 2%);
+	background-color: $light-nav-color;
+	transition: addTrans(background-color);
+}
+.data:hover {
+	cursor: pointer;
+}
+</style>
+
+<style lang='scss'>
+@use 'styles' as *;
+
+body.dark {
+	nav {
+		background-color: darken($dark-bg-color, 2%);
+	}
 }
 </style>

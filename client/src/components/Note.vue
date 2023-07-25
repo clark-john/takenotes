@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { marked } from 'marked';
 import { useRouter } from 'vue-router';
-import xss from 'xss';
-
-const m = marked.setOptions({ mangle: false, headerIds: false });
+import { xss, marked } from '../utils';
 
 interface Note {
 	content: string;
@@ -20,7 +17,7 @@ defineProps<Note>();
 <template>
 	<div class="note" :style="{ backgroundColor }" @click="() => router.push('/note/' + notebookId + '/' + id)">
 		<div class="content">
-			<span v-html="xss(m.parse(content))"></span>
+			<span v-html="xss(marked.parse(content))"></span>
 		</div>
 	</div>
 </template>
@@ -29,7 +26,7 @@ defineProps<Note>();
 .note {
 	color: black;
 	border-radius: 6px;
-	padding: 1.2rem;
+	padding: .8rem 1.2rem;
 	height: 250px;
 	overflow: hidden;
 	.content {

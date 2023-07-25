@@ -1,12 +1,12 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Note } from './dto/note';
-import { AddNotebook, Notebook } from './dto/notebook';
+import { AddNotebook, Notebook, UpdateNotebook } from './dto/notebook';
 import { NotebookBase, NoteBase } from 'src/bases';
 import { DetaObject } from 'src/types';
 import { randomUUID } from 'crypto';
 import * as chroma from 'chroma-js';
-import { keyToId } from 'src/utils';
-import { set } from 'lodash';
+import { keyToId, removeEmpty } from 'src/utils';
+import { merge, omit, set } from 'lodash';
 import { CurrentUserId } from 'src/decorators';
 import { NotebookService } from 'src/services/notebook.service';
 
@@ -75,7 +75,21 @@ export class NotebookResolver {
 		@Args('id', { type: () => String }) id: string
 	) {
 		const nb = await this.nb.findOne(currentId, id);
-		await NotebookBase.delete(nb?.id ?? '');
+		await NotebookBase.delete(nb?.id!);
+		const notes = await (NoteBase.fetch({ notebookId: id }));
+		const proms: Promise<null>[] = [];
+		notes.items.forEach(x => {
+			proms.push(NoteBase.delete(x.key as string));
+		});
+		await Promise.all(proms);
 		return nb;
+	}
+
+	@Mutation(() => Notebook)
+	async updateNotebook(@CurrentUserId() currentId: string, @Args('notebook') { id, name, description }: UpdateNotebook){
+		const nb = await this.nb.findOne(currentId, id);
+		const updates = removeEmpty({ name, description });
+		await NotebookBase.update(updates, id);
+		return merge(nb, updates);
 	}
 }

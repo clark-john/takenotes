@@ -1,5 +1,6 @@
 import {
 	AnyVariables,
+	UseMutationResponse,
 	UseQueryArgs,
 	UseQueryResponse,
 	useMutation,
@@ -10,7 +11,13 @@ import {
 	GetNotebooksDoc,
 	GetNotebookInfoDoc,
 	GetNotebookInfoQuery,
-	GetNotebookInfoQueryVariables
+	GetNotebookInfoQueryVariables,
+	DeleteNotebookDoc,
+	UpdateNotebookDoc,
+	DeleteNotebookMutation,
+	DeleteNotebookMutationVariables,
+	UpdateNotebookMutation,
+	UpdateNotebookMutationVariables
 } from '@generated';
 import { DocumentNode } from 'graphql';
 import { defineStore } from 'pinia';
@@ -33,6 +40,11 @@ export const useNotebook = defineStore('notebook', () => {
 			variables: { id }
 		});
 	}
+	const { executeMutation: deleteNotebook } = useMutation(DeleteNotebookDoc) as 
+		UseMutationResponse<DeleteNotebookMutation, DeleteNotebookMutationVariables>;
 
-	return { getNotebooks, addNotebook, getNotebookInfo };
+	const { executeMutation: updateNotebook } = useMutation(UpdateNotebookDoc) as 
+		UseMutationResponse<UpdateNotebookMutation, UpdateNotebookMutationVariables>
+
+	return { getNotebooks, addNotebook, getNotebookInfo, deleteNotebook, updateNotebook };
 });

@@ -1,0 +1,11 @@
+mutation UpdateNotebook($id: ID!, $name: String, $description: String) {
+  updateNotebook(notebook:{
+    id: $id
+    name: $name
+    description: $description
+  }) {
+		id
+    name
+    description
+  }
+}

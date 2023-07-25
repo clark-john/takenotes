@@ -8,3 +8,4 @@ generates:
       - typescript-document-nodes
     config:
       nameSuffix: Doc
+      gqlImport: '@urql/vue#gql'

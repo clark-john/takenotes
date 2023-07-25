@@ -53,6 +53,7 @@ type Mutation {
   logout: String!
   createNotebook(notebook: AddNotebook!): Notebook!
   deleteNotebook(id: String!): Notebook!
+  updateNotebook(notebook: UpdateNotebook!): Notebook!
   createNote(note: AddNote!): Note!
   createBlankNote(notebookId: String!): Note!
   updateNote(note: UpdateNote!): String!
@@ -76,7 +77,12 @@ input Register {
 input AddNotebook {
   name: String!
   description: String!
-  photoFilename: String
+}
+
+input UpdateNotebook {
+  name: String
+  description: String
+  id: ID!
 }
 
 input AddNote {

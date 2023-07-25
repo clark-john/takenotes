@@ -1,17 +1,8 @@
 <script lang="ts" setup>
-import { useTheme } from '@stores/themeStore';
 import { ref } from 'vue';
 
-const store = useTheme();
-
-const { setTheme, theme } = store;
-
-const active = ref<boolean>(theme === 'dark');
 const isLogin = ref(true);
 
-function handleUpdate(ev: boolean) {
-	setTheme(ev ? 'dark' : 'light');
-}
 </script>
 
 <template>
@@ -25,14 +16,7 @@ function handleUpdate(ev: boolean) {
 			<RegisterForm v-else @login-form="isLogin = true" />
 		</div>
 		<div class="switch">
-			<n-switch
-				size="large"
-				@update:value="handleUpdate"
-				v-model:value="active"
-			>
-				<template #checked> Dark </template>
-				<template #unchecked> Light </template>
-			</n-switch>
+			<ThemeSwitcher />
 		</div>
 	</div>
 </template>

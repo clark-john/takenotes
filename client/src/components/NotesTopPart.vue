@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { GetNotebookInfoQuery } from '@generated';
-import { ChevronLeft } from '@vicons/fa';
+import { ChevronBack } from '@vicons/ionicons5';
 
 defineProps<{
   ninfo?: GetNotebookInfoQuery
@@ -13,8 +13,8 @@ const emit = defineEmits<{
 <template>
   <div class="top">
     <router-link to="/">
-      <n-icon size="30">
-        <ChevronLeft />
+      <n-icon size="40">
+        <ChevronBack />
       </n-icon>
     </router-link>
     <div class="notebook-name">

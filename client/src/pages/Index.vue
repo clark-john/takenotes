@@ -48,7 +48,7 @@ const show = ref(false);
 
 <style lang="scss" scoped>
 .main {
-	margin-top: 10px;
+	margin-block: 12px;
 	.title {
 		display: grid;
 		font-size: 2rem;
