@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <n-popconfirm 
     :show="show" 
-    @positive-click="emit('confirm')" 
+    @positive-click="emit('confirm'); emit('close')" 
     @negative-click="emit('close')" 
     @clickoutside="emit('close')"
   >

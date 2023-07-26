@@ -1,6 +1,10 @@
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { xss, marked } from '../utils';
+import { DropdownOption, useMessage } from 'naive-ui';
+import { EllipsisVertical } from '@vicons/ionicons5';
+import { xss, marked, keyFunctionRunner } from '../utils';
+import { useNote } from '@stores';
 
 interface Note {
 	content: string;
@@ -10,12 +14,47 @@ interface Note {
 }
 
 const router = useRouter();
+const message = useMessage();
+const { deleteNote } = useNote();
 
-defineProps<Note>();
+/* eslint-disable vue/no-setup-props-destructure */
+const { id } = defineProps<Note>();
+
+const isConfirm = ref(false);
+
+const options: DropdownOption[] = [
+	{
+		label: "Delete",
+		key: "delete"
+	}
+];
+
+function onConfirm(){
+	deleteNote({ id }).then(() => {
+		message.info("Note deleted successfully");
+	});
+}
+
+const handleSelect = keyFunctionRunner({
+	delete: () => {
+		isConfirm.value = true;
+	}
+});
+
 </script>
 
 <template>
 	<div class="note" :style="{ backgroundColor }" @click="() => router.push('/note/' + notebookId + '/' + id)">
+		<ConfirmDelete 
+			@close="isConfirm = false" 
+			:show="isConfirm"
+			@confirm="onConfirm"
+		/>
+		<n-dropdown :options="options" @select="handleSelect">
+			<n-icon size="16">
+				<EllipsisVertical />
+			</n-icon>
+		</n-dropdown>
 		<div class="content">
 			<span v-html="xss(marked.parse(content))"></span>
 		</div>
@@ -28,6 +67,7 @@ defineProps<Note>();
 	border-radius: 6px;
 	padding: .8rem 1.2rem;
 	height: 250px;
+	position: relative;
 	overflow: hidden;
 	.content {
 		text-overflow: ellipsis;
@@ -37,6 +77,10 @@ defineProps<Note>();
 	}
 	&:hover {
 		cursor: pointer;
+	}
+	i {
+		position: absolute;
+		right: 9px;
 	}
 }
 </style>

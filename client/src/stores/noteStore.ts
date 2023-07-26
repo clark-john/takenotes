@@ -9,6 +9,9 @@ import {
 	AddBlankNoteDoc,
 	AddBlankNoteMutation,
 	AddBlankNoteMutationVariables,
+	DeleteNoteDoc,
+	DeleteNoteMutation,
+	DeleteNoteMutationVariables,
 	GetNoteInfoDoc,
 	GetNoteInfoQuery,
 	GetNoteInfoQueryVariables,
@@ -42,5 +45,8 @@ export const useNote = defineStore('note', () => {
 	/* updateNote */
 	const { executeMutation: updateNote } = useMutation(UpdateNoteDoc) as UseMutationResponse<any, Partial<UpdateNoteMutationVariables>>;
 
-	return { getNotes, createBlankNote, getNoteInfo, updateNote };
+	/* deleteNote */
+	const { executeMutation: deleteNote } = useMutation(DeleteNoteDoc) as UseMutationResponse<DeleteNoteMutation, DeleteNoteMutationVariables>;
+
+	return { getNotes, createBlankNote, getNoteInfo, updateNote, deleteNote };
 });

@@ -48,6 +48,8 @@ export type Mutation = {
   login: AccessToken;
   logout: Scalars['String']['output'];
   register: AccessToken;
+  saveNote: Note;
+  saveNotebook: Notebook;
   updateNote: Scalars['String']['output'];
   updateNotebook: Notebook;
 };
@@ -85,6 +87,16 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   register: Register;
+};
+
+
+export type MutationSaveNoteArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationSaveNotebookArgs = {
+  id: Scalars['String']['input'];
 };
 
 

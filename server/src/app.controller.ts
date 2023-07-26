@@ -13,32 +13,31 @@ interface Payload {
 
 @Controller()
 export class AppController {
-	constructor(
-		private jwt: JwtService,
-		private config: ConfigService
-	){}
+	constructor(private jwt: JwtService, private config: ConfigService) {}
 
 	@Get()
 	getHello(): string {
 		return 'Hello World';
 	}
 
-	@Post("refresh")
-	refreshToken(@Cookies() cookies: { token: string }){
+	@Post('refresh')
+	refreshToken(@Cookies() cookies: { token: string }) {
 		const rtoken = cookies.token;
 		if (!rtoken) {
-			throw new UnauthorizedException("No refresh token");
+			throw new UnauthorizedException('No refresh token');
 		}
 		try {
-			const payload: Payload = this.jwt.verify(rtoken, { secret: this.config.get("JWT_REFRESH_SECRET") });
-			return { 
+			const payload: Payload = this.jwt.verify(rtoken, {
+				secret: this.config.get('JWT_REFRESH_SECRET')
+			});
+			return {
 				accessToken: this.jwt.sign(omit(payload, ['iat', 'exp']), {
-					secret: this.config.get("JWT_ACCESS_SECRET"),
-					expiresIn: 1800,
+					secret: this.config.get('JWT_ACCESS_SECRET'),
+					expiresIn: 1800
 				})
 			};
 		} catch (e) {
-			throw new UnauthorizedException("Expired token");
+			throw new UnauthorizedException('Expired token');
 		}
 	}
 }

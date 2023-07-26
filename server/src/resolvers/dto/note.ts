@@ -1,4 +1,12 @@
-import { Field, GraphQLISODateTime, ID, InputType, ObjectType, OmitType, PartialType } from '@nestjs/graphql';
+import {
+	Field,
+	GraphQLISODateTime,
+	ID,
+	InputType,
+	ObjectType,
+	OmitType,
+	PartialType
+} from '@nestjs/graphql';
 
 @ObjectType()
 export class Note {

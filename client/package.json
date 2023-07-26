@@ -25,6 +25,8 @@
     "marked-emoji": "^1.2.0",
     "marked-highlight": "^2.0.1",
     "pinia": "^2.1.4",
+    "twemoji-parser": "^14.0.0",
+    "universal-emoji-parser": "^1.0.102",
     "uuid": "^9.0.0",
     "vue": "^3.2.47",
     "vue-router": "^4.2.4",

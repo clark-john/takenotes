@@ -72,3 +72,8 @@ ul:has(li input[type=checkbox]) {
 pre code span {
   font-family: monospace;
 }
+
+.emoji {
+  height: 1.3rem;
+  display: inline-block;
+}

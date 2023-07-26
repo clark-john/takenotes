@@ -23,7 +23,7 @@ export class UserResolver {
 
 	/**
 	 * Login a user
-	*/
+	 */
 	@Mutation(() => AccessToken)
 	async login(
 		@Args('login') { username, password }: Login,
@@ -44,7 +44,7 @@ export class UserResolver {
 		const payload = {
 			username: user.username,
 			sub: userReturn.id
-		}
+		};
 
 		const accessToken = this.getAccessToken(payload);
 		const refreshToken = this.getRefreshToken(payload);
@@ -53,18 +53,18 @@ export class UserResolver {
 
 		return {
 			accessToken,
-			user: keyToId(user)			
-		}
+			user: keyToId(user)
+		};
 	}
 
 	/**
 	 * Register a user
-	*/
+	 */
 	@Mutation(() => AccessToken)
 	async register(
 		@Args('register') register: Register,
 		@Context() ctx: any
-	): Promise<AccessToken> {	
+	): Promise<AccessToken> {
 		const res = ctx.res as Response;
 		const args = register as Register & DetaObject;
 		args.createdAt = new Date();
@@ -81,7 +81,7 @@ export class UserResolver {
 		const payload = {
 			username: args.username,
 			sub: user.id
-		}
+		};
 
 		const accessToken = this.getAccessToken(payload);
 		const refreshToken = this.getRefreshToken(payload);
@@ -90,21 +90,24 @@ export class UserResolver {
 
 		return {
 			accessToken,
-			user			
-		}
+			user
+		};
 	}
 
 	@Mutation(() => String)
-	async logout(@Cookies() cookies: { token: string }, @Context() ctx: { res: Response }){
+	async logout(
+		@Cookies() cookies: { token: string },
+		@Context() ctx: { res: Response }
+	) {
 		if (cookies.token) {
-			ctx.res.clearCookie("token");
+			ctx.res.clearCookie('token');
 		}
-		return "logged out";
+		return 'logged out';
 	}
 
 	/**
 	 * get current user or otherwise unauthorized
-	*/
+	 */
 	@Query(() => User)
 	async me(@Context() ctx: { req: Request }) {
 		return keyToId(this.omitPassword(await UserBase.get(ctx.req.user.sub)));
@@ -112,13 +115,13 @@ export class UserResolver {
 
 	/**
 	 * utility functions
-	*/
+	 */
 	private omitPassword(
 		obj: any
 	): Omit<Record<string, any>, 'actualPassword' | 'password'> {
 		return omit(obj, ['actualPassword', 'password']);
 	}
-	
+
 	private getAccessToken(payload: any) {
 		payload.exp = this.getExpInMinutes(30);
 		return this.jwt.sign(payload, {
@@ -128,7 +131,7 @@ export class UserResolver {
 	private getRefreshToken(payload: any) {
 		payload.exp = this.getExpInMinutes(90);
 		return this.jwt.sign(payload, {
-			secret: this.config.get("JWT_REFRESH_SECRET")
+			secret: this.config.get('JWT_REFRESH_SECRET')
 		});
 	}
 
@@ -136,8 +139,8 @@ export class UserResolver {
 		return Math.trunc(Date.now() / 1000) + 60 * mins;
 	}
 
-	private sendRTCookie(res: Response, token: string){
-		res.cookie("token", token, {
+	private sendRTCookie(res: Response, token: string) {
+		res.cookie('token', token, {
 			httpOnly: true,
 			expires: new Date(this.getExpInMinutes(60) * 1000)
 		});
@@ -145,9 +148,9 @@ export class UserResolver {
 
 	/**
 	 * simple hello world (excluded from auth)
-	*/	
+	 */
 	@Query(() => String)
-	hello(){
-		return "Hello World";
+	hello() {
+		return 'Hello World';
 	}
 }

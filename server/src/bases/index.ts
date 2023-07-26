@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { Base, Deta } from 'deta';
+import { Deta } from 'deta';
 
 declare module 'dotenv' {
 	interface DotenvParseOutput {
@@ -7,12 +7,11 @@ declare module 'dotenv' {
 	}
 }
 
-type DetaBase = ReturnType<typeof Base>;
-
 const deta = Deta(config().parsed?.DETA_PROJECT_KEY);
 
-const UserBase: DetaBase = deta.Base('users');
-const NotebookBase: DetaBase = deta.Base('notebooks');
-const NoteBase: DetaBase = deta.Base('notes');
+const UserBase = deta.Base('users');
+const NotebookBase = deta.Base('notebooks');
+const NoteBase = deta.Base('notes');
+const SavedBase = deta.Base('saved');
 
-export { UserBase, NoteBase, NotebookBase };
+export { UserBase, NoteBase, NotebookBase, SavedBase };

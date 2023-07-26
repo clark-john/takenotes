@@ -9,7 +9,7 @@ import { AppController } from './app.controller';
 import { IsAuthMiddleware } from './middleware/isauth.middleware';
 import { NotebookService } from './services/notebook.service';
 
-const services = [NotebookService]
+const services = [NotebookService];
 
 @Module({
 	imports: [

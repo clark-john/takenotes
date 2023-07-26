@@ -32,22 +32,11 @@ onMounted(() => {
 	}, 80);
 });
 
-// const token: Ref<string | null> = ref(localStorage.getItem("token"));
-// const url = import.meta.env.VITE_SERVER_URL;
-
-/*watchEffect(() => {
-	fetch(url + "/refresh", {
-		method: "POST"
-	}).then(x => x.json()).then(x => {
-		loading.value = false;
-		localStorage.setItem("token", x.accessToken);
-	});
-});*/
 </script>
 
 <template>
 	<n-config-provider :theme="themeRef">
-		<n-message-provider>
+		<n-message-provider :duration="1500">
 			<n-dialog-provider>
 				<n-loading-bar-provider>
 					<router-view></router-view>

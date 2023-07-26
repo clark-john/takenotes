@@ -6,7 +6,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
-import { isEqual } from 'lodash';
 
 interface Body {
 	operationName: string | null;
@@ -23,20 +22,14 @@ declare module 'express' {
 
 @Injectable()
 export class IsAuthMiddleware implements NestMiddleware {
-	constructor(
-		private jwt: JwtService, 
-		private config: ConfigService
-	){}
+	constructor(private jwt: JwtService, private config: ConfigService) {}
 
 	async use(req: Request, _res: Response, next: (error?: any) => void) {
-		const { query, operationName }: Body = req.body;
-
-		if (query?.includes('IntrospectionQuery') || isEqual(req.body, {})) {
-			// for playground and graphql-codegen introspection
-			console.log('playground');
-		} else if (
+		const { query }: Body = req.body;
+		if (
 			// for query/mutation exclusion from auth checking
-			(operationName !== 'IntrospectionQuery') &&
+			query &&
+			!query.includes("IntrospectionQuery") &&
 			!this.excluded('login', 'register', 'hello').test(query)
 		) {
 			const auth = req.headers.authorization;
@@ -53,7 +46,6 @@ export class IsAuthMiddleware implements NestMiddleware {
 					throw new UnauthorizedException(e);
 				}
 			}
-		} else {
 		}
 		next();
 	}

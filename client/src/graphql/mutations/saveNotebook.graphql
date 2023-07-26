@@ -1,0 +1,8 @@
+mutation SaveNotebook($id: String!) {
+  saveNotebook(id: $id){
+    id
+    name
+    description
+    backgroundColor
+  }
+}

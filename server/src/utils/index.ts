@@ -5,7 +5,7 @@ import { isNull, keys, set, unset } from 'lodash';
  */
 export function keyToId(obj: any) {
 	if (isNull(obj)) {
-		return null;		
+		return null;
 	}
 	const id = obj.key;
 	unset(obj, 'key');
@@ -13,7 +13,7 @@ export function keyToId(obj: any) {
 	return obj;
 }
 
-export function removeEmpty(obj: Record<string, any>){
+export function removeEmpty(obj: Record<string, any>) {
 	keys(obj).forEach(x => {
 		if (!obj[x]) {
 			unset(obj, x);

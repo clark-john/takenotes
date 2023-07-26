@@ -52,12 +52,14 @@ type Mutation {
   register(register: Register!): AccessToken!
   logout: String!
   createNotebook(notebook: AddNotebook!): Notebook!
+  saveNotebook(id: String!): Notebook!
   deleteNotebook(id: String!): Notebook!
   updateNotebook(notebook: UpdateNotebook!): Notebook!
   createNote(note: AddNote!): Note!
   createBlankNote(notebookId: String!): Note!
   updateNote(note: UpdateNote!): String!
   deleteNote(id: String!): Note!
+  saveNote(id: String!): Note!
 }
 
 input Login {

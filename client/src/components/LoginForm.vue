@@ -2,7 +2,7 @@
 import { ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { FormInst, FormRules, useMessage, useLoadingBar } from 'naive-ui';
-import { useMutation } from '@urql/vue';
+import { useMutation, UseMutationResponse } from '@urql/vue';
 import { LoginDoc, LoginMutationVariables, LoginMutation } from '@generated';
 import { addAntiSpecialChars, removeGraphqlBracket } from '../utils';
 
@@ -17,7 +17,7 @@ const loginValue = ref({
 	password: ''
 });
 
-const { executeMutation: loginUser } = useMutation(LoginDoc);
+const { executeMutation: loginUser } = useMutation(LoginDoc) as UseMutationResponse<LoginMutation, LoginMutationVariables>;
 
 const rules: FormRules = {
 	username: [
@@ -42,21 +42,21 @@ function login() {
 	formRef.value?.validate(errs => {
 		if (!errs) {
 			loading.start();
-			loginUser(loginValue.value as LoginMutationVariables).then(
+			loginUser(loginValue.value).then(
 				async result => {
 					const errorMessage = removeGraphqlBracket(
 						result.error?.message ?? ''
 					);
 					if (errorMessage) {
 						loading.error();
-						message.error(errorMessage, { duration: 1500 });
+						message.error(errorMessage);
 					} else {
 						if (localStorage.getItem('token')) {
 							localStorage.removeItem('token');
 						}
 						localStorage.setItem(
 							'token',
-							(result.data as LoginMutation).login.accessToken
+							result.data!.login.accessToken
 						);
 						loading.finish();
 						router.push('/');

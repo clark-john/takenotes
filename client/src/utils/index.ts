@@ -1,5 +1,6 @@
 import { filterXSS, whiteList } from 'xss';
 
+// reexports
 export { addAntiSpecialChars } from './antiSpecialChars';
 export { launchSessionErrorDialog } from './sessionErrDialog';
 export { marked } from './marked';
@@ -29,3 +30,9 @@ export const xss = (content: string) => {
 		}
 	});
 };
+
+export function keyFunctionRunner(objOfFuncs: Record<string, () => void>){
+	return (key: string) => {
+		(objOfFuncs[key] ?? (() => {}))();
+	}
+}

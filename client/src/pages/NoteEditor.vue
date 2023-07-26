@@ -4,6 +4,7 @@ import { ChevronBack } from '@vicons/ionicons5';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import throttle from 'lodash.throttle';
+import unip from 'universal-emoji-parser';
 import { xss, marked } from '../utils';
 
 const note = ref({
@@ -70,10 +71,13 @@ function runThrottled(){
       <div 
         class="markdown" 
         :style="{ backgroundColor: data?.getNote?.backgroundColor, display: isPreview ? '' : 'none' }" 
-        v-html="xss(marked.parse(note.content))"
+        v-html="xss(unip.parseToUnicode(marked.parse(note.content)))"
       >
       </div>
     </div>
+    <!-- <div v-if="data" class="note">
+      <n-button type="error">Delete note</n-button>
+    </div> -->
   </div>
 </template>
 
@@ -114,4 +118,5 @@ function runThrottled(){
   align-items: center;
   justify-content: center;
 }
+
 </style>

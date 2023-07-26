@@ -4,6 +4,7 @@ import { EllipsisVertical } from '@vicons/ionicons5';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { ref } from 'vue';
 import { useNotebook } from '@stores';
+import { keyFunctionRunner } from '../utils';
 
 const { deleteNotebook, updateNotebook } = useNotebook();
 const router = useRouter();
@@ -32,6 +33,10 @@ const options: DropdownOption[] = [
 	{
 		label: "Rename",
 		key: "rename"
+	},
+	{
+		label: "Save",
+		key: "save"
 	}
 ];
 
@@ -40,7 +45,7 @@ function deleteNb(){
 	deleteNotebook({ id }).then(result => {
 		const name = result.data?.deleteNotebook.name;
 		loading.finish();
-		message.info("Notebook " + name + " deleted successfully", { duration: 1500 });
+		message.info("Notebook " + name + " deleted successfully");
 	});
 }
 
@@ -48,21 +53,18 @@ function renameNb(name: string){
 	loading.start();
 	updateNotebook({ id, name }).then(() => {
 		loading.finish();
-		message.success("Notebook renamed successfully", { duration: 1500 });
+		message.success("Notebook renamed successfully");
 	});
 }
 
-function handleDropdown(e: 'delete' | 'rename'){
-	const obj = {
-		delete: () => {
-			isShowDeleteConfirm.value = true;
-		},
-		rename: () => {
-			isShowRename.value = true;
-		}
+const handleDropdown = keyFunctionRunner({
+	delete: () => {
+		isShowDeleteConfirm.value = true;
+	},
+	rename: () => {
+		isShowRename.value = true;
 	}
-	obj[e]();
-}
+});
 
 </script>
 
