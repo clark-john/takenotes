@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 
 (async () => {
-	const port = 8000;
+	const port = 8080;
 	const app = await NestFactory.create(AppModule);
 
 	app.use(cookieParser());

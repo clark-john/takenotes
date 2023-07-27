@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriverConfig, ApolloDriver, } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import {
@@ -23,7 +23,7 @@ const services = [NotebookService, NoteService, SavedService];
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+			autoSchemaFile: process.env.NODE_ENV === 'development' ? join(process.cwd(), 'src/schema.gql') : true,
 			playground: process.env.NODE_ENV === 'development',
 			context: ({ req, res }: any) => ({ req, res }),
 		}),

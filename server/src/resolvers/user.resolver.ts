@@ -123,13 +123,13 @@ export class UserResolver {
 	}
 
 	private getAccessToken(payload: any) {
-		payload.exp = this.getExpInMinutes(60);
+		payload.exp = this.getExpInMinutes(60 * 24); // 1 day
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_ACCESS_SECRET')
 		});
 	}
 	private getRefreshToken(payload: any) {
-		payload.exp = this.getExpInMinutes(180); // 3 hours
+		payload.exp = this.getExpInMinutes(process.env.NODE_ENV === 'development' ? 180 : 60 * 24 * 7 * 30); // 30 days
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_REFRESH_SECRET')
 		});
@@ -142,7 +142,9 @@ export class UserResolver {
 	private sendRTCookie(res: Response, token: string) {
 		res.cookie('token', token, {
 			httpOnly: true,
-			expires: new Date(this.getExpInMinutes(60) * 1000)
+			expires: new Date(this.getExpInMinutes(process.env.NODE_ENV === 'development' ? 180 : 60 * 24 * 7 * 30) * 1000),
+			secure: process.env.NODE_ENV !== 'development',
+			domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'vercel.app'
 		});
 	}
 
