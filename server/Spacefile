@@ -13,3 +13,4 @@ micros:
       env:
         - name: JWT_ACCESS_SECRET
         - name: JWT_REFRESH_SECRET
+        - name: CLIENT_URL
