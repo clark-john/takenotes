@@ -2,9 +2,7 @@
 	<div>
 		<TopPart text="Settings" />
 		<div class="content">
-			<div class="theme">
-				Switch Theme: <ThemeSwitcher class="switch" />
-			</div>
+			<div class="theme">Switch Theme: <ThemeSwitcher class="switch" /></div>
 		</div>
 	</div>
 </template>

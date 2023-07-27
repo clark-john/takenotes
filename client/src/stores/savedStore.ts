@@ -26,8 +26,12 @@ import {
 import { defineStore } from 'pinia';
 
 export const useSaved = defineStore('saved', () => {
-	const { executeQuery: getSavedNotes } = useQuery({query:GetSavedNotesDoc}) as UseQueryResponse<GetSavedNotesQuery, AnyVariables>
-	const { executeQuery: getSavedNotebooks } = useQuery({query:GetSavedNotebooksDoc}) as UseQueryResponse<GetSavedNotebooksQuery, AnyVariables>
+	const { executeQuery: getSavedNotes } = useQuery({
+		query: GetSavedNotesDoc
+	}) as UseQueryResponse<GetSavedNotesQuery, AnyVariables>;
+	const { executeQuery: getSavedNotebooks } = useQuery({
+		query: GetSavedNotebooksDoc
+	}) as UseQueryResponse<GetSavedNotebooksQuery, AnyVariables>;
 
 	/* save notebook */
 	const { executeMutation: saveNotebook } = useMutation(
@@ -43,7 +47,7 @@ export const useSaved = defineStore('saved', () => {
 	const { executeMutation: unsaveNote } = useMutation(
 		UnsaveNoteDoc
 	) as UseMutationResponse<UnsaveNoteMutation, UnsaveNoteMutationVariables>;
-	
+
 	/* unsave notebook */
 	const { executeMutation: unsaveNotebook } = useMutation(
 		UnsaveNotebookDoc
@@ -52,5 +56,12 @@ export const useSaved = defineStore('saved', () => {
 		UnsaveNotebookMutationVariables
 	>;
 
-	return { saveNotebook, saveNote, unsaveNote, unsaveNotebook, getSavedNotebooks, getSavedNotes };
+	return {
+		saveNotebook,
+		saveNote,
+		unsaveNote,
+		unsaveNotebook,
+		getSavedNotebooks,
+		getSavedNotes
+	};
 });

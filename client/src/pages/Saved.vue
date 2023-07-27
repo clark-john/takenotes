@@ -9,9 +9,9 @@ const { data: notes } = getSavedNotes();
 
 const dontHaveStyle: StyleValue = {
 	textAlign: 'center',
-	marginBlock: '1rem', 
+	marginBlock: '1rem',
 	color: '#999'
-}
+};
 </script>
 
 <template>
@@ -21,17 +21,23 @@ const dontHaveStyle: StyleValue = {
 			<div class="notebooks">
 				<div class="header">Notebooks</div>
 				<div class="content" v-if="data.getSavedNotebooks.length">
-					<Notebook 
-						v-for="{ id, backgroundColor, name, saved: s } of data.getSavedNotebooks" 
-						:key="id" 
-						:bg="backgroundColor ?? ''" 
+					<Notebook
+						v-for="{
+							id,
+							backgroundColor,
+							name,
+							saved: s
+						} of data.getSavedNotebooks"
+						:key="id"
+						:bg="backgroundColor ?? ''"
 						:id="id"
-						:name="name" 
+						:name="name"
 						:saved="s"
-						
 					/>
 				</div>
-				<div v-else :style="dontHaveStyle">You currently don't have any saved notebooks</div>
+				<div v-else :style="dontHaveStyle">
+					You currently don't have any saved notebooks
+				</div>
 			</div>
 			<div class="notes">
 				<div class="header">Notes</div>
@@ -47,7 +53,9 @@ const dontHaveStyle: StyleValue = {
 						class="note"
 					/>
 				</div>
-				<div v-else :style="dontHaveStyle">You currently don't have any saved notes</div>
+				<div v-else :style="dontHaveStyle">
+					You currently don't have any saved notes
+				</div>
 			</div>
 		</div>
 		<div v-else-if="fetching">
@@ -75,7 +83,8 @@ const dontHaveStyle: StyleValue = {
 .header {
 	font-size: 1.7rem;
 }
-.notes, .notebooks {
+.notes,
+.notebooks {
 	.content {
 		padding: 2rem;
 		gap: 1rem;

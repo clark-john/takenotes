@@ -1,7 +1,5 @@
 import {
-	AnyVariables,
 	UseMutationResponse,
-	UseQueryArgs,
 	UseQueryResponse,
 	useMutation,
 	useQuery
@@ -21,18 +19,12 @@ import {
 	GetNotebooksQuery,
 	GetNotebooksQueryVariables
 } from '@generated';
-import { DocumentNode } from 'graphql';
 import { defineStore } from 'pinia';
 
-function pausedQuery(query: DocumentNode): UseQueryArgs<any, AnyVariables> {
-	return {
-		query,
-		pause: true
-	};
-}
-
 export const useNotebook = defineStore('notebook', () => {
-	const { executeQuery: getNotebooks } = useQuery(pausedQuery(GetNotebooksDoc)) as UseQueryResponse<GetNotebooksQuery, GetNotebooksQueryVariables>;
+	const { executeQuery: getNotebooks } = useQuery({
+		query: GetNotebooksDoc
+	}) as UseQueryResponse<GetNotebooksQuery, GetNotebooksQueryVariables>;
 	const { executeMutation: addNotebook } = useMutation(AddNotebookDoc);
 	function getNotebookInfo(
 		id: string
