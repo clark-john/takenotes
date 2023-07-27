@@ -9,3 +9,7 @@ micros:
       - npm run build
     run: node dist/main
     public: true
+    presets:
+      env:
+        - name: JWT_ACCESS_SECRET
+        - name: JWT_REFRESH_SECRET
