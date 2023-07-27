@@ -17,7 +17,7 @@ export function clearValues(obj: any): any {
 }
 
 export const xss = (content: string) => {
-	return filterXSS(content, { 
+	return filterXSS(content, {
 		whiteList: {
 			...whiteList,
 			input: ['disabled', 'checked', 'type'],
@@ -31,8 +31,8 @@ export const xss = (content: string) => {
 	});
 };
 
-export function keyFunctionRunner(objOfFuncs: Record<string, () => void>){
+export function keyFunctionRunner(objOfFuncs: Record<string, () => void>) {
 	return (key: string) => {
 		(objOfFuncs[key] ?? (() => {}))();
-	}
+	};
 }

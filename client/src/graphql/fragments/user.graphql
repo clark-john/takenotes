@@ -1,4 +1,4 @@
-fragment UserReturn on User {
+fragment RegularUser on User {
   id
   firstName
   lastName

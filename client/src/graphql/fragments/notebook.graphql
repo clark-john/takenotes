@@ -1,0 +1,9 @@
+fragment RegularNotebook on Notebook {
+  id
+  name
+  userId
+  description
+  createdAt
+  saved
+  backgroundColor
+}

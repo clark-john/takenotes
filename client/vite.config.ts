@@ -34,7 +34,7 @@ export default defineConfig({
 				replacement: resolve(__dirname, 'src/types')
 			},
 			{
-				find: "styles",
+				find: 'styles',
 				replacement: resolve(__dirname, 'src/styles')
 			}
 		]

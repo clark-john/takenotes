@@ -1,6 +1,6 @@
 fragment SignedIn on AccessToken {
 	accessToken
 	user {
-		...UserReturn
+		...RegularUser
 	}
 }

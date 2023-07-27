@@ -42,7 +42,7 @@ nav {
 }
 </style>
 
-<style lang='scss'>
+<style lang="scss">
 @use 'styles' as *;
 
 body.dark {

@@ -18,7 +18,7 @@ function checkTheme() {
 
 onMounted(() => {
 	checkTheme();
-	
+
 	/* if (!localStorage.getItem("prefer-color-notes")) {
 		localStorage.setItem("prefer-color-notes", "true");
 	} */
@@ -31,7 +31,6 @@ onMounted(() => {
 		body.classList.add('transition');
 	}, 80);
 });
-
 </script>
 
 <template>

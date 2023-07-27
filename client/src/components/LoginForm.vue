@@ -17,7 +17,9 @@ const loginValue = ref({
 	password: ''
 });
 
-const { executeMutation: loginUser } = useMutation(LoginDoc) as UseMutationResponse<LoginMutation, LoginMutationVariables>;
+const { executeMutation: loginUser } = useMutation(
+	LoginDoc
+) as UseMutationResponse<LoginMutation, LoginMutationVariables>;
 
 const rules: FormRules = {
 	username: [
@@ -42,27 +44,20 @@ function login() {
 	formRef.value?.validate(errs => {
 		if (!errs) {
 			loading.start();
-			loginUser(loginValue.value).then(
-				async result => {
-					const errorMessage = removeGraphqlBracket(
-						result.error?.message ?? ''
-					);
-					if (errorMessage) {
-						loading.error();
-						message.error(errorMessage);
-					} else {
-						if (localStorage.getItem('token')) {
-							localStorage.removeItem('token');
-						}
-						localStorage.setItem(
-							'token',
-							result.data!.login.accessToken
-						);
-						loading.finish();
-						router.push('/');
+			loginUser(loginValue.value).then(async result => {
+				const errorMessage = removeGraphqlBracket(result.error?.message ?? '');
+				if (errorMessage) {
+					loading.error();
+					message.error(errorMessage);
+				} else {
+					if (localStorage.getItem('token')) {
+						localStorage.removeItem('token');
 					}
+					localStorage.setItem('token', result.data!.login.accessToken);
+					loading.finish();
+					router.push('/');
 				}
-			);
+			});
 		}
 	});
 }

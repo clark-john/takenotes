@@ -1,3 +1,5 @@
-mutation SaveNote {
-  
+mutation SaveNote($id: String!) {
+  saveNote(id: $id){
+    id
+  }
 }

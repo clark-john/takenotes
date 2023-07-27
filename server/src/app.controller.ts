@@ -33,7 +33,7 @@ export class AppController {
 			return {
 				accessToken: this.jwt.sign(omit(payload, ['iat', 'exp']), {
 					secret: this.config.get('JWT_ACCESS_SECRET'),
-					expiresIn: 1800
+					expiresIn: 3600
 				})
 			};
 		} catch (e) {

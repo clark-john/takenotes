@@ -29,24 +29,28 @@ export const useNote = defineStore('note', () => {
 	): UseQueryResponse<GetNotesQuery, GetNotesQueryVariables> {
 		return useQuery({ query: GetNotesDoc, variables: { id } });
 	}
-		
+
 	/* createBlankNote */
 	const { executeMutation: createBlankNote } = useMutation(
 		AddBlankNoteDoc
 	) as UseMutationResponse<AddBlankNoteMutation, AddBlankNoteMutationVariables>;
-	
+
 	/* getNoteInfo */
 	function getNoteInfo(
 		id: string
 	): UseQueryResponse<GetNoteInfoQuery, GetNoteInfoQueryVariables> {
-		return useQuery({ query: GetNoteInfoDoc, variables: { id } })
+		return useQuery({ query: GetNoteInfoDoc, variables: { id } });
 	}
 
 	/* updateNote */
-	const { executeMutation: updateNote } = useMutation(UpdateNoteDoc) as UseMutationResponse<any, Partial<UpdateNoteMutationVariables>>;
+	const { executeMutation: updateNote } = useMutation(
+		UpdateNoteDoc
+	) as UseMutationResponse<any, Partial<UpdateNoteMutationVariables>>;
 
 	/* deleteNote */
-	const { executeMutation: deleteNote } = useMutation(DeleteNoteDoc) as UseMutationResponse<DeleteNoteMutation, DeleteNoteMutationVariables>;
+	const { executeMutation: deleteNote } = useMutation(
+		DeleteNoteDoc
+	) as UseMutationResponse<DeleteNoteMutation, DeleteNoteMutationVariables>;
 
 	return { getNotes, createBlankNote, getNoteInfo, updateNote, deleteNote };
 });

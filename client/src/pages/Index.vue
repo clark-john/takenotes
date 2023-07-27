@@ -28,13 +28,17 @@ const show = ref(false);
 			<div class="container" v-if="data.getNotebooks.length">
 				<!-- @vue-ignore -->
 				<Notebook
-					v-for="x of data.getNotebooks.toSorted((a: Note, b: Note) => {
-						return a.createdAt < b.createdAt ? 1 : -1;
-					})"
+					v-for="x of (() => {
+						data.getNotebooks.sort((a: Note, b: Note) => {
+							return a.createdAt < b.createdAt ? 1 : -1;
+						});
+						return data.getNotebooks;
+					})()"
 					:key="x.id"
-					:bg="x.backgroundColor"
 					:name="x.name"
+					:bg="x.backgroundColor ?? ''"
 					:id="x.id"
+					:saved="x.saved"
 				/>
 			</div>
 			<div v-else class="no-notebooks">You current don't have notebooks</div>

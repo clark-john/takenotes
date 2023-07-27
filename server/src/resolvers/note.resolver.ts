@@ -1,19 +1,17 @@
-import { BadRequestException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { NotFoundException } from '@nestjs/common';
 import { AddNote, Note, UpdateNote } from './dto/note';
 import * as chroma from 'chroma-js';
 import { randomUUID } from 'crypto';
 import { NotebookService } from 'src/services/notebook.service';
 import { CurrentUserId } from 'src/decorators';
-import { NoteBase, SavedBase } from 'src/bases';
+import { NoteBase } from 'src/bases';
 import { DetaObject } from 'src/types';
 import { keyToId, removeEmpty } from 'src/utils';
-import { Saved } from './dto/saved';
+import { NoteService } from 'src/services/note.service';
 
 @Resolver()
 export class NoteResolver {
-	constructor(private nb: NotebookService) {}
+	constructor(private nb: NotebookService, private note: NoteService) {}
 
 	@Mutation(() => Note)
 	async createNote(
@@ -27,7 +25,8 @@ export class NoteResolver {
 			content,
 			createdAt,
 			notebookId,
-			userId: currentId
+			userId: currentId,
+			saved: false
 		} as Note);
 		await this.nb.findOne(currentId, notebookId);
 		return await (async () => {
@@ -48,7 +47,8 @@ export class NoteResolver {
 			backgroundColor: chroma.random().set('hsl.l', 0.84).hex(),
 			content: '',
 			notebookId: id,
-			userId: currentId
+			userId: currentId,
+			saved: false
 		};
 		Object.assign(note, obj);
 		const randomId = randomUUID();
@@ -64,7 +64,7 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('note') { backgroundColor, content, id }: UpdateNote
 	) {
-		const note = await this.findOne(currentId, id);
+		const note = await this.note.findOne(currentId, id);
 		const updates = removeEmpty({
 			content,
 			backgroundColor
@@ -78,26 +78,8 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('id', { type: () => String }) id: string
 	) {
-		const note = await this.findOne(currentId, id);
+		const note = await this.note.findOne(currentId, id);
 		await NoteBase.delete(note.id);
-		return note;
-	}
-
-	@Mutation(() => Note)
-	async saveNote(
-		@CurrentUserId() userId: string,
-		@Args('id', { type: () => String }) id: string
-	) {
-		const note = await this.findOne(userId, id as string);
-		const saved = await SavedBase.fetch({ userId, objectId: id, type: 'note' });
-		if (saved.items.length) {
-			throw new BadRequestException('Already saved');
-		}
-		await SavedBase.put({
-			objectId: id,
-			userId,
-			type: 'note'
-		} as Saved & DetaObject);
 		return note;
 	}
 
@@ -109,14 +91,5 @@ export class NoteResolver {
 			return note;
 		}
 		return null;
-	}
-
-	private async findOne(currentId: string, id: string) {
-		const items = (await NoteBase.fetch({ userId: currentId, key: id })).items;
-		const note = items.find(x => id === keyToId(x).id) as Note & DetaObject;
-		if (!note) {
-			throw new NotFoundException('Note not found');
-		}
-		return note;
 	}
 }

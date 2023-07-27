@@ -21,6 +21,7 @@ type Note {
   backgroundColor: String!
   notebookId: ID!
   userId: ID!
+  saved: Boolean
   createdAt: DateTime!
 }
 
@@ -35,10 +36,13 @@ type Notebook {
   description: String!
   backgroundColor: ID
   userId: ID!
+  saved: Boolean!
   createdAt: DateTime!
 }
 
 type Query {
+  getSavedNotes: [Note!]!
+  getSavedNotebooks: [Notebook!]!
   me: User!
   hello: String!
   getNotes(notebookId: String!): [Note!]!
@@ -48,18 +52,20 @@ type Query {
 }
 
 type Mutation {
+  saveNotebook(id: String!): Notebook!
+  unsaveNotebook(id: String!): Notebook!
+  saveNote(id: String!): Note!
+  unsaveNote(id: String!): Note!
   login(login: Login!): AccessToken!
   register(register: Register!): AccessToken!
   logout: String!
   createNotebook(notebook: AddNotebook!): Notebook!
-  saveNotebook(id: String!): Notebook!
   deleteNotebook(id: String!): Notebook!
   updateNotebook(notebook: UpdateNotebook!): Notebook!
   createNote(note: AddNote!): Note!
   createBlankNote(notebookId: String!): Note!
   updateNote(note: UpdateNote!): String!
   deleteNote(id: String!): Note!
-  saveNote(id: String!): Note!
 }
 
 input Login {

@@ -1,0 +1,5 @@
+mutation UnsaveNote($id: String!) {
+  unsaveNote(id: $id){
+    id
+  }
+}

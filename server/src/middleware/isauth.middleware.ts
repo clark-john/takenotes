@@ -29,7 +29,7 @@ export class IsAuthMiddleware implements NestMiddleware {
 		if (
 			// for query/mutation exclusion from auth checking
 			query &&
-			!query.includes("IntrospectionQuery") &&
+			!query.includes('IntrospectionQuery') &&
 			!this.excluded('login', 'register', 'hello').test(query)
 		) {
 			const auth = req.headers.authorization;

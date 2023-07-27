@@ -25,6 +25,9 @@ export class Note {
 	@Field(() => ID)
 	userId: string;
 
+	@Field(() => Boolean, { nullable: true })
+	saved: boolean;
+
 	@Field(() => GraphQLISODateTime)
 	createdAt: Date;
 }

@@ -16,15 +16,15 @@ const routes: RouteRecordRaw[] = [
 				component: () => import('./pages/Notes.vue')
 			},
 			{
-				path: "note/:notebookId/:id",
+				path: 'note/:notebookId/:id',
 				component: () => import('./pages/NoteEditor.vue')
 			},
 			{
-				path: "settings",
+				path: 'settings',
 				component: () => import('./pages/Settings.vue')
 			},
 			{
-				path: "saved",
+				path: 'saved',
 				component: () => import('./pages/Saved.vue')
 			}
 		]

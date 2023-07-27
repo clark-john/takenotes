@@ -4,5 +4,6 @@ fragment NoteInfo on Note {
 	backgroundColor
 	notebookId
 	userId
+	saved
 	createdAt
 }

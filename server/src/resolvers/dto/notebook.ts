@@ -6,7 +6,6 @@ import {
 	ObjectType,
 	PartialType
 } from '@nestjs/graphql';
-import { AddNote } from './note';
 
 @ObjectType()
 export class Notebook {
@@ -24,6 +23,9 @@ export class Notebook {
 
 	@Field(() => ID)
 	userId: string;
+
+	@Field(() => Boolean)
+	saved: boolean;
 
 	@Field(() => GraphQLISODateTime)
 	createdAt: Date;

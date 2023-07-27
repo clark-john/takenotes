@@ -40,12 +40,19 @@ function addBlankNote() {
 			<NotesTopPart :ninfo="ninfo" @addBlankNote="addBlankNote" />
 			<div class="notes" v-if="notes?.length">
 				<Note
-					v-for="{ content, backgroundColor, id, notebookId } in data?.getNotes"
+					v-for="{
+						content,
+						backgroundColor,
+						id,
+						notebookId,
+						saved
+					} in data?.getNotes"
 					:key="id"
 					:content="content"
 					:backgroundColor="backgroundColor"
 					:id="id"
 					:notebook-id="notebookId"
+					:saved="saved!"
 				/>
 			</div>
 			<div v-else class="no-notes">You currently don't have any notes</div>
@@ -55,7 +62,8 @@ function addBlankNote() {
 
 <style lang="scss" scoped>
 .main > .top {
-	&, a {
+	&,
+	a {
 		display: flex;
 		align-items: center;
 	}
@@ -67,7 +75,8 @@ function addBlankNote() {
 	gap: 1.2rem;
 	grid-template-columns: repeat(auto-fit, 280px);
 }
-.no-notes, .not-found {
+.no-notes,
+.not-found {
 	margin-block: 4rem;
 	text-align: center;
 	&:not(.not-found) {

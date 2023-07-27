@@ -123,13 +123,13 @@ export class UserResolver {
 	}
 
 	private getAccessToken(payload: any) {
-		payload.exp = this.getExpInMinutes(30);
+		payload.exp = this.getExpInMinutes(60);
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_ACCESS_SECRET')
 		});
 	}
 	private getRefreshToken(payload: any) {
-		payload.exp = this.getExpInMinutes(90);
+		payload.exp = this.getExpInMinutes(180); // 3 hours
 		return this.jwt.sign(payload, {
 			secret: this.config.get('JWT_REFRESH_SECRET')
 		});

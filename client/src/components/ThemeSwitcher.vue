@@ -14,12 +14,8 @@ function handleUpdate(ev: boolean) {
 </script>
 
 <template>
-  <n-switch
-    size="large"
-    @update:value="handleUpdate"
-    v-model:value="active"
-  >
-    <template #checked> Dark </template>
-    <template #unchecked> Light </template>
-  </n-switch>
+	<n-switch size="large" @update:value="handleUpdate" v-model:value="active">
+		<template #checked> Dark </template>
+		<template #unchecked> Light </template>
+	</n-switch>
 </template>

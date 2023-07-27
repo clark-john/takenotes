@@ -1,5 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Note } from './dto/note';
 import { AddNotebook, Notebook, UpdateNotebook } from './dto/notebook';
 import { NotebookBase, NoteBase, SavedBase } from 'src/bases';
@@ -10,7 +9,6 @@ import { keyToId, removeEmpty } from 'src/utils';
 import { merge, omit, set } from 'lodash';
 import { CurrentUserId } from 'src/decorators';
 import { NotebookService } from 'src/services/notebook.service';
-import { Saved } from './dto/saved';
 
 type NoteType = Note & DetaObject;
 type Notes = Promise<NoteType[]>;
@@ -59,34 +57,13 @@ export class NotebookResolver {
 			description,
 			createdAt,
 			backgroundColor: chroma.random().hex('rgb'),
-			userId
+			userId,
+			saved: false
 		} as Notebook);
 		const notebook = keyToId(await NotebookBase.put(nb, randomUUID()));
 		// resetting it to actual Date, because Deta is serializing it after put.
 		set(notebook, 'createdAt', createdAt);
 		return notebook;
-	}
-
-	@Mutation(() => Notebook)
-	async saveNotebook(
-		@CurrentUserId() userId: string,
-		@Args('id', { type: () => String }) id: string
-	) {
-		const nb = await this.nb.findOne(userId, id);
-		const saved = await SavedBase.fetch({
-			userId,
-			objectId: id,
-			type: 'notebook'
-		});
-		if (saved.items.length) {
-			throw new BadRequestException('Already saved');
-		}
-		await SavedBase.put({
-			objectId: id,
-			userId,
-			type: 'notebook'
-		} as Saved & DetaObject);
-		return nb;
 	}
 
 	@Mutation(() => Notebook)

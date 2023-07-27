@@ -1,52 +1,89 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { DropdownOption, useMessage } from 'naive-ui';
+import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { EllipsisVertical } from '@vicons/ionicons5';
 import { xss, marked, keyFunctionRunner } from '../utils';
-import { useNote } from '@stores';
+import { useNote, useSaved } from '@stores';
 
 interface Note {
 	content: string;
 	backgroundColor: string;
 	notebookId: string;
 	id: string;
+	saved?: boolean;
 }
 
 const router = useRouter();
 const message = useMessage();
+const loading = useLoadingBar();
 const { deleteNote } = useNote();
+const { saveNote, unsaveNote } = useSaved();
 
+const p = defineProps<Note>();
 /* eslint-disable vue/no-setup-props-destructure */
-const { id } = defineProps<Note>();
+const { id } = p;
 
 const isConfirm = ref(false);
 
-const options: DropdownOption[] = [
+const options = ref<DropdownOption[]>([
 	{
-		label: "Delete",
-		key: "delete"
+		label: 'Delete',
+		key: 'delete'
+	},
+	{
+		label: 'Save',
+		key: 'save'
 	}
-];
+]);
 
-function onConfirm(){
+function onConfirm() {
+	loading.start();
 	deleteNote({ id }).then(() => {
-		message.info("Note deleted successfully");
+		loading.finish();
+		message.info('Note deleted successfully');
 	});
 }
+
+watchEffect(() => {
+	const item = options.value.find(x => x.key === 'save' || x.key === 'unsave');
+	const index = options.value.indexOf(item!);
+	if (p.saved) {
+		options.value[index] = { label: 'Unsave', key: 'unsave' };
+	} else {
+		options.value[index] = { label: 'Save', key: 'save' };
+	}
+});
 
 const handleSelect = keyFunctionRunner({
 	delete: () => {
 		isConfirm.value = true;
+	},
+	save: () => {
+		loading.start();
+		saveNote({ id }).then(() => {
+			loading.finish();
+			message.success('Note saved');
+		});
+	},
+	unsave: () => {
+		loading.start();
+		unsaveNote({ id }).then(() => {
+			loading.finish();
+			message.success('Note unsaved');
+		});
 	}
 });
-
 </script>
 
 <template>
-	<div class="note" :style="{ backgroundColor }" @click="() => router.push('/note/' + notebookId + '/' + id)">
-		<ConfirmDelete 
-			@close="isConfirm = false" 
+	<div
+		class="note"
+		:style="{ backgroundColor }"
+		@click="() => router.push('/note/' + notebookId + '/' + id)"
+	>
+		<ConfirmDelete
+			@close="isConfirm = false"
 			:show="isConfirm"
 			@confirm="onConfirm"
 		/>
@@ -65,7 +102,7 @@ const handleSelect = keyFunctionRunner({
 .note {
 	color: black;
 	border-radius: 6px;
-	padding: .8rem 1.2rem;
+	padding: 0.8rem 1.2rem;
 	height: 250px;
 	position: relative;
 	overflow: hidden;
