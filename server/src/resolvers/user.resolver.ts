@@ -144,7 +144,7 @@ export class UserResolver {
 			httpOnly: true,
 			expires: new Date(this.getExpInMinutes(process.env.NODE_ENV === 'development' ? 180 : 60 * 24 * 7 * 30) * 1000),
 			secure: process.env.NODE_ENV !== 'development',
-			domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'vercel.app'
+			sameSite: "none"
 		});
 	}
 
