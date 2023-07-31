@@ -16,10 +16,20 @@ import { UserBase } from 'src/bases';
 import { DetaObject } from 'src/types';
 import { keyToId } from 'src/utils';
 import { Cookies } from 'src/decorators';
+import { DetanticService } from 'src/services';
+import { Model } from 'detantic';
 
 @Resolver()
 export class UserResolver {
-	constructor(private jwt: JwtService, private config: ConfigService) {}
+	users: Model<User>;
+	constructor(
+		private jwt: JwtService, 
+		private config: ConfigService,
+		private detantic: DetanticService
+	) {
+		const dt = this.detantic.getInstance();
+		this.users = dt.createModel<User>("users", User.createSchema());
+	}
 
 	/**
 	 * Login a user
@@ -110,7 +120,8 @@ export class UserResolver {
 	 */
 	@Query(() => User)
 	async me(@Context() ctx: { req: Request }) {
-		return keyToId(this.omitPassword(await UserBase.get(ctx.req.user.sub)));
+		const [data] = await this.users.findOne({ key: ctx.req.user.sub  } as any);
+		return this.omitPassword(data);
 	}
 
 	/**
@@ -142,7 +153,8 @@ export class UserResolver {
 	private sendRTCookie(res: Response, token: string) {
 		res.cookie('token', token, {
 			httpOnly: true,
-			expires: new Date(this.getExpInMinutes(process.env.NODE_ENV === 'development' ? 180 : 60 * 24 * 7 * 30) * 1000),
+			// expires: new Date(this.getExpInMinutes(process.env.NODE_ENV === 'development' ? 180 : 60 * 24 * 7 * 30) * 1000),
+			expires: new Date(this.getExpInMinutes(180) * 1000),
 			secure: process.env.NODE_ENV !== 'development',
 			sameSite: "none"
 		});

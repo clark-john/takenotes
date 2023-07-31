@@ -8,10 +8,16 @@ import { NoteBase } from 'src/bases';
 import { DetaObject } from 'src/types';
 import { keyToId, removeEmpty } from 'src/utils';
 import { NoteService } from 'src/services/note.service';
+import { DetanticService } from 'src/services';
+import { Model } from 'detantic';
 
 @Resolver()
 export class NoteResolver {
-	constructor(private nb: NotebookService, private note: NoteService) {}
+	notes: Model<Note>;
+	constructor(private nb: NotebookService, private note: NoteService, private detantic: DetanticService) {
+		const d = this.detantic.getInstance();
+		this.notes = d.createModel<Note>("notes", Note.createSchema());
+	}
 
 	@Mutation(() => Note)
 	async createNote(
@@ -64,6 +70,15 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('note') { backgroundColor, content, id }: UpdateNote
 	) {
+		/*const [note] = await this.notes.findOne({ userId: currentId, id })
+		const updates = removeEmpty({
+			content,
+			backgroundColor
+		});
+		await this.notes.updateById(updates, (note as Note).id);
+		return 'update success';*/
+		
+		// code above is slow because of two get by key requests
 		const note = await this.note.findOne(currentId, id);
 		const updates = removeEmpty({
 			content,
@@ -78,14 +93,14 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('id', { type: () => String }) id: string
 	) {
-		const note = await this.note.findOne(currentId, id);
-		await NoteBase.delete(note.id);
-		return note;
+		const [note] = await this.notes.findOne({ id, userId: currentId });
+		return await this.notes.deleteByKey((note as Note).id);
 	}
 
 	@Query(() => Note, { nullable: true })
 	async getNote(@Args('id', { type: () => String }) id: string) {
-		const note = keyToId((await NoteBase.get(id)) || null) as Note | null;
+		const [n] = await this.notes.findOne({ id });
+		const note = n as Note;
 		if (note) {
 			note.createdAt = new Date(note.createdAt);
 			return note;

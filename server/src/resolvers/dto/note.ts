@@ -7,9 +7,10 @@ import {
 	OmitType,
 	PartialType
 } from '@nestjs/graphql';
+import { BaseModel } from 'detantic';
 
 @ObjectType()
-export class Note {
+export class Note extends BaseModel {
 	@Field(() => ID)
 	id: string;
 

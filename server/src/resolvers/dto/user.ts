@@ -6,6 +6,7 @@ import {
 	GraphQLISODateTime
 } from '@nestjs/graphql';
 import { MinLength } from 'class-validator';
+import { BaseModel } from 'detantic';
 
 @InputType()
 export class Login {
@@ -38,7 +39,7 @@ export class Register {
 }
 
 @ObjectType()
-export class User {
+export class User extends BaseModel {
 	@Field(() => ID)
 	id: string;
 

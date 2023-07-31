@@ -10,11 +10,16 @@ import {
 	NoteResolver,
 	SavedResolver
 } from './resolvers';
-import { NoteService, NotebookService, SavedService } from './services';
+import { NoteService, NotebookService, SavedService, DetanticService } from './services';
 import { AppController } from './app.controller';
 import { IsAuthMiddleware } from './middleware/isauth.middleware';
 
-const services = [NotebookService, NoteService, SavedService];
+const services = [
+	NotebookService, 
+	NoteService, 
+	SavedService,
+	DetanticService
+];
 
 @Module({
 	imports: [
