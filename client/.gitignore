@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 yarn.lock
+
+# ignoring it  at the moment
+android

@@ -1,3 +1,4 @@
 src/generated.ts linguist-generated
+android/app/src linguist-generated
 components.d.ts linguist-generated
 *.graphql linguist-language=GraphQL linguist-documentation=false linguist-detectable
