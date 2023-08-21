@@ -1,17 +1,5 @@
-import { isNull, keys, set, unset } from 'lodash';
-
-/**
- * A function to convert a object that has the key named "key" into "id"
- */
-export function keyToId(obj: any) {
-	if (isNull(obj)) {
-		return null;
-	}
-	const id = obj.key;
-	unset(obj, 'key');
-	set(obj, 'id', id);
-	return obj;
-}
+import { BaseModel } from 'detantic';
+import { keys, unset } from 'lodash';
 
 export function removeEmpty(obj: Record<string, any>) {
 	keys(obj).forEach(x => {
@@ -19,5 +7,10 @@ export function removeEmpty(obj: Record<string, any>) {
 			unset(obj, x);
 		}
 	});
+	return obj;
+}
+
+export function deserializeDate<T extends BaseModel & { createdAt: string | Date }>(obj: T){
+	obj.createdAt = new Date(obj.createdAt);
 	return obj;
 }

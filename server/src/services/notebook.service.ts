@@ -1,21 +1,24 @@
 import { NotFoundException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 
-import { NotebookBase } from 'src/bases';
 import { Notebook } from 'src/resolvers/dto/notebook';
-import { DetaObject } from 'src/types';
-import { keyToId } from 'src/utils';
-
-type NotebookType = (Notebook & DetaObject) | null;
+import { DetanticService } from './detantic.service';
+import { Model } from 'detantic';
 
 @Injectable()
 export class NotebookService {
-	async findOne(currentId: string, id: string): Promise<NotebookType> {
-		const i = (await NotebookBase.fetch({ userId: currentId, key: id })).items;
-		const nb = i.find(x => id === keyToId(x).id) as NotebookType;
-		if (!nb) {
+	notebooks: Model<Notebook>;
+	constructor(private dt: DetanticService){
+		this.notebooks = this.dt.getInstance().createModel("notebooks", Notebook.createSchema());
+	}
+	async findOne(currentId: string, id: string): Promise<Notebook> {
+		try {			
+			return await this.notebooks.findOne({
+				userId: currentId,
+				id
+			}) as Notebook;
+		} catch (e) {
 			throw new NotFoundException('Notebook not found');
 		}
-		return nb;
 	}
 }

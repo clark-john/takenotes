@@ -1,19 +1,23 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Notebook } from './dto/notebook';
-import { NoteBase, NotebookBase, SavedBase } from 'src/bases';
 import { CurrentUserId } from 'src/decorators';
 import { Note } from './dto/note';
-import { NoteService, NotebookService, SavedService } from 'src/services';
-import { keyToId } from 'src/utils';
-import { DetaObject } from 'src/types';
+import { DetanticService, SavedService } from 'src/services';
+import { deserializeDate } from 'src/utils';
+import { Model } from 'detantic';
 
 @Resolver()
 export class SavedResolver {
+	notes: Model<Note>;
+	notebooks: Model<Notebook>;
 	constructor(
 		private saved: SavedService,
-		private nb: NotebookService,
-		private note: NoteService
-	) {}
+		private dt: DetanticService
+	) {
+		const deta = this.dt.getInstance();
+		this.notes = deta.createModel("notes", Note.createSchema());
+		this.notebooks = deta.createModel("notebooks", Notebook.createSchema());
+	}
 
 	@Mutation(() => Notebook)
 	async saveNotebook(
@@ -49,17 +53,11 @@ export class SavedResolver {
 
 	@Query(() => [Note])
 	async getSavedNotes(@CurrentUserId() userId: string){
-		return (await NoteBase.fetch({ userId, saved: true })).items.map((x: Note & DetaObject) => {
-			x.createdAt = new Date(x.createdAt as Date);
-			return keyToId(x);
-		});
+		return (await this.notes.findMany({ userId, saved: true })).map(deserializeDate);
 	}
 
 	@Query(() => [Notebook])
 	async getSavedNotebooks(@CurrentUserId() userId: string){
-		return (await NotebookBase.fetch({ userId, saved: true })).items.map((x: Notebook & DetaObject) => {
-			x.createdAt = new Date(x.createdAt as Date);
-			return keyToId(x);
-		});
+		return (await this.notebooks.findMany({ userId, saved: true })).map(deserializeDate);
 	}
 }

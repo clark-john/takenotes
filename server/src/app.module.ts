@@ -21,6 +21,13 @@ const services = [
 	DetanticService
 ];
 
+const resolvers = [
+	SavedResolver,
+	UserResolver,
+	NotebookResolver,
+	NoteResolver
+];
+
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -35,10 +42,7 @@ const services = [
 		JwtModule.register({})
 	],
 	providers: [
-		SavedResolver,
-		UserResolver,
-		NotebookResolver,
-		NoteResolver,
+		...resolvers,
 		...services
 	],
 	controllers: [AppController]

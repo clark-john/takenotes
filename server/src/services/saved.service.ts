@@ -1,12 +1,24 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Note } from 'src/resolvers/dto/note';
+import { Notebook } from 'src/resolvers/dto/notebook';
 import { NoteService } from './note.service';
 import { NotebookService } from './notebook.service';
-import { NoteBase, NotebookBase } from 'src/bases';
+import { DetanticService } from './detantic.service';
+import { Model } from 'detantic';
 
 @Injectable()
 export class SavedService {
-	constructor(private nb: NotebookService, private note: NoteService) {}
+	notes: Model<Note>;
+	notebooks: Model<Notebook>;
+	constructor(
+		private nb: NotebookService, 
+		private note: NoteService,
+		private dt: DetanticService
+	) {
+		const deta = this.dt.getInstance();
+		this.notes = deta.createModel("notes", Note.createSchema());
+		this.notebooks = deta.createModel("notebooks", Notebook.createSchema());
+	}
 
 	async updateSaved(
 		isSave: boolean,
@@ -31,9 +43,9 @@ export class SavedService {
 
 		// update object's saved property
 		if (type === 'note') {
-			await NoteBase.update({ saved: isSave }, obj!.id);
+			await this.notes.updateById({ saved: isSave }, obj!.id);
 		} else {
-			await NotebookBase.update({ saved: isSave }, obj!.id);
+			await this.notebooks.updateById({ saved: isSave }, obj!.id);
 		}
 
 		return obj;

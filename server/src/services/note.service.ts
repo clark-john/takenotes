@@ -1,17 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NoteBase } from 'src/bases';
 import { Note } from 'src/resolvers/dto/note';
-import { DetaObject } from 'src/types';
-import { keyToId } from 'src/utils';
+import { DetanticService } from './detantic.service';
+import { Model } from 'detantic';
 
 @Injectable()
 export class NoteService {
+	notes: Model<Note>;
+	constructor(
+		private dt: DetanticService
+	) {
+		const deta = this.dt.getInstance();
+		this.notes = deta.createModel("notes", Note.createSchema());
+	}
 	async findOne(currentId: string, id: string) {
-		const items = (await NoteBase.fetch({ userId: currentId, key: id })).items;
-		const note = items.find(x => id === keyToId(x).id) as Note & DetaObject;
-		if (!note) {
+		try {
+			return await this.notes.findOne({ userId: currentId, id })
+		} catch (e) {
 			throw new NotFoundException('Note not found');
 		}
-		return note;
 	}
 }

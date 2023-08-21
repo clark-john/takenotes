@@ -5,7 +5,8 @@ import {
 	ID,
 	GraphQLISODateTime
 } from '@nestjs/graphql';
-import { MinLength } from 'class-validator';
+import { IsDate, IsString, MinLength } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import { BaseModel } from 'detantic';
 
 @InputType()
@@ -41,19 +42,35 @@ export class Register {
 @ObjectType()
 export class User extends BaseModel {
 	@Field(() => ID)
+	@IsString()
 	id: string;
 
 	@Field()
 	firstName: string;
 
 	@Field({ nullable: true })
+	@IsString()
 	lastName: string;
 
 	@Field()
+	@IsString()
 	username: string;
 
+	@Field(() => GraphQLISODateTime, { nullable: true })
+	@IsDate()
+	createdAt: Date;
+
+	@Field()
+	@IsString()
+	@Exclude()
+	@MinLength(8)
+	password: string;
+
 	@Field({ nullable: true })
-	createdAt: string;
+	@IsString()
+	@MinLength(8)
+	@Exclude()
+	actualPassword: string;
 }
 
 @ObjectType()

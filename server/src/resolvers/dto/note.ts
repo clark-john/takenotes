@@ -7,29 +7,40 @@ import {
 	OmitType,
 	PartialType
 } from '@nestjs/graphql';
+import { IsBoolean, IsDate, IsHexColor, IsString, IsUUID } from 'class-validator';
 import { BaseModel } from 'detantic';
 
 @ObjectType()
 export class Note extends BaseModel {
 	@Field(() => ID)
+	@IsString()
+	@IsUUID(4)
 	id: string;
 
 	@Field(() => String)
+	@IsString()
 	content: string;
 
 	@Field(() => String)
+	@IsString()
+	@IsHexColor()
 	backgroundColor: string;
 
 	@Field(() => ID)
+	@IsString()
+	@IsUUID(4)
 	notebookId: string;
 
 	@Field(() => ID)
+	@IsString()
 	userId: string;
 
 	@Field(() => Boolean, { nullable: true })
+	@IsBoolean()
 	saved: boolean;
 
 	@Field(() => GraphQLISODateTime)
+	@IsDate()
 	createdAt: Date;
 }
 
