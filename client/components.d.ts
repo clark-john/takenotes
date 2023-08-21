@@ -7,7 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AsyncNotebook: typeof import('./src/components/async/AsyncNotebook.vue')['default']
     CenteredSpin: typeof import('./src/components/CenteredSpin.vue')['default']
     ConfirmDelete: typeof import('./src/components/popovers/ConfirmDelete.vue')['default']
     CreateNotebookModal: typeof import('./src/components/CreateNotebookModal.vue')['default']
