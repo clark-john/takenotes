@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { ApolloDriverConfig, ApolloDriver, } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import {
 	NotebookResolver,
 	UserResolver,
@@ -31,7 +31,8 @@ const resolvers = [
 @Module({
 	imports: [
 		ConfigModule.forRoot({
-			isGlobal: true
+			isGlobal: true,
+			envFilePath: resolve(process.cwd(), ".env.local")
 		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,

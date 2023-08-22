@@ -38,6 +38,10 @@ export class Notebook extends BaseModel {
 	@Field(() => Boolean)
 	saved: boolean;
 
+	@IsBoolean()
+	@Field(() => Boolean)
+	isPublic: boolean;
+
 	@IsDate()
 	@Field(() => GraphQLISODateTime)
 	createdAt: Date;
@@ -50,6 +54,9 @@ export class AddNotebook {
 
 	@Field(() => String)
 	description: string;
+
+	@Field(() => Boolean, { defaultValue: true })
+	isPublic: boolean;
 
 	// @Field(() => String, { nullable: true })
 	// photoFilename?: string;

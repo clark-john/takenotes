@@ -35,9 +35,13 @@ export class Note extends BaseModel {
 	@IsString()
 	userId: string;
 
-	@Field(() => Boolean, { nullable: true })
+	@Field(() => Boolean)
 	@IsBoolean()
 	saved: boolean;
+
+	@Field(() => Boolean)
+	@IsBoolean()
+	isPublic: boolean;
 
 	@Field(() => GraphQLISODateTime)
 	@IsDate()

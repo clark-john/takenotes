@@ -6,4 +6,5 @@ fragment NoteInfo on Note {
 	userId
 	saved
 	createdAt
+	isPublic
 }

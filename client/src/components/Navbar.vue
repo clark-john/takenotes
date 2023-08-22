@@ -12,6 +12,10 @@ const { data, fetching } = getCurrent();
 			<img src="/favicon.svg" alt="" height="30" />
 			TakeNotes
 		</div>
+		<div style='display: flex; gap:34px'>
+			<router-link to="/">Your Notebooks</router-link>
+			<router-link to="/shared">Shared</router-link>
+		</div>
 		<div v-if="data" class="data">
 			<ProfileMenu :name="data.me.firstName" />
 		</div>

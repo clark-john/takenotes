@@ -4,7 +4,7 @@ import { EllipsisVertical } from '@vicons/ionicons5';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { ref, watchEffect } from 'vue';
 import { useNotebook, useSaved } from '@stores';
-import { keyFunctionRunner } from '../utils';
+import { keyFunctionRunner } from '../../utils';
 
 const { deleteNotebook, updateNotebook } = useNotebook();
 const { saveNotebook, unsaveNotebook } = useSaved();

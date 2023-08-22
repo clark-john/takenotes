@@ -15,9 +15,8 @@ export class SavedService {
 		private note: NoteService,
 		private dt: DetanticService
 	) {
-		const deta = this.dt.getInstance();
-		this.notes = deta.createModel("notes", Note.createSchema());
-		this.notebooks = deta.createModel("notebooks", Notebook.createSchema());
+		this.notes = this.dt.createModel("notes", Note.createSchema());
+		this.notebooks = this.dt.createModel("notebooks", Notebook.createSchema());
 	}
 
 	async updateSaved(

@@ -1,20 +1,18 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Note, UpdateNote } from './dto/note';
 import * as chroma from 'chroma-js';
-import { NotebookService } from 'src/services/notebook.service';
+import { Model } from 'detantic';
+import { Note, UpdateNote } from './dto/note';
 import { CurrentUserId } from 'src/decorators';
-import { removeEmpty } from 'src/utils';
+import { deserializeDate, removeEmpty } from 'src/utils';
 import { NoteService } from 'src/services/note.service';
 import { DetanticService } from 'src/services';
-import { Model } from 'detantic';
 
 @Resolver()
 export class NoteResolver {
 	notes: Model<Note>;
 
-	constructor(private nb: NotebookService, private note: NoteService, private detantic: DetanticService) {
-		const d = this.detantic.getInstance();
-		this.notes = d.createModel("notes", Note.createSchema());
+	constructor(private note: NoteService, private dt: DetanticService) {
+		this.notes = this.dt.createModel("notes", Note.createSchema());
 	}
 
 	@Mutation(() => Note)
@@ -22,17 +20,15 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('notebookId', { type: () => String }) id: string
 	) {
-		const createdAt = new Date();
-		const note = await this.notes.insert({
-			createdAt,
+		return deserializeDate(await this.notes.insert({
+			createdAt: new Date(),
 			backgroundColor: chroma.random().set('hsl.l', 0.84).hex(),
 			content: '',
 			notebookId: id,
 			userId: currentId,
-			saved: false
-		});
-		note.createdAt = createdAt;
-		return note;
+			saved: false,
+			isPublic: true
+		}));
 	}
 
 	@Mutation(() => String)
@@ -63,8 +59,7 @@ export class NoteResolver {
 		const n = await this.notes.findOne({ id });
 		const note = n;
 		if (note) {
-			note.createdAt = new Date(note.createdAt);
-			return note;
+			return deserializeDate(note as Note);
 		}
 		return null;
 	}

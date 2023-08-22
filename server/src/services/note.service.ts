@@ -9,8 +9,7 @@ export class NoteService {
 	constructor(
 		private dt: DetanticService
 	) {
-		const deta = this.dt.getInstance();
-		this.notes = deta.createModel("notes", Note.createSchema());
+		this.notes = this.dt.createModel("notes", Note.createSchema());
 	}
 	async findOne(currentId: string, id: string) {
 		try {

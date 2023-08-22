@@ -19,13 +19,13 @@ const show = ref(false);
 </script>
 
 <template>
-	<div class="main">
+	<div class="main-page">
 		<div class="title">
 			<span>Notebooks</span>
 			<n-button @click="show = !show" type="primary"> Create </n-button>
 		</div>
 		<div v-if="data">
-			<div class="container" v-if="data.getNotebooks.length">
+			<NotebooksContainer class="container" v-if="data.getNotebooks.length">
 				<!-- @vue-ignore -->
 				<Notebook
 					v-for="x of (() => {
@@ -40,7 +40,8 @@ const show = ref(false);
 					:id="x.id"
 					:saved="x.saved"
 				/>
-			</div>
+
+			</NotebooksContainer>
 			<div v-else class="no-notebooks">You current don't have notebooks</div>
 		</div>
 		<div v-else-if="fetching">
@@ -51,7 +52,7 @@ const show = ref(false);
 </template>
 
 <style lang="scss" scoped>
-.main {
+.main-page {
 	margin-block: 12px;
 	.title {
 		display: grid;
@@ -69,14 +70,6 @@ const show = ref(false);
 	.spin,
 	.container {
 		margin-block: 1rem;
-	}
-	.container {
-		$number: 5;
-		display: grid;
-		justify-items: center;
-		margin-inline: 4rem;
-		grid-template-columns: repeat(auto-fit, 200px);
-		column-gap: 3rem;
 	}
 }
 .no-notebooks {

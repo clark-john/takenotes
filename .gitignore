@@ -1,0 +1,33 @@
+# ---- Global .gitignore ----- 
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# node modules, dist, and local files
+node_modules
+dist
+dist-ssr
+*.local
+
+# Lock files
+yarn.lock
+package-lock.json
+bower.lock
+pnpm-lock.ya?ml
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

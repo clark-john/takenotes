@@ -1,4 +1,5 @@
 import {
+  AnyVariables,
 	UseMutationResponse,
 	UseQueryResponse,
 	useMutation,
@@ -17,15 +18,18 @@ import {
 	UpdateNotebookMutation,
 	UpdateNotebookMutationVariables,
 	GetNotebooksQuery,
-	GetNotebooksQueryVariables
+  GetPublicNotebooksDoc,
+  GetPublicNotebooksQuery
 } from '@generated';
 import { defineStore } from 'pinia';
 
 export const useNotebook = defineStore('notebook', () => {
 	const { executeQuery: getNotebooks } = useQuery({
 		query: GetNotebooksDoc
-	}) as UseQueryResponse<GetNotebooksQuery, GetNotebooksQueryVariables>;
+	}) as UseQueryResponse<GetNotebooksQuery, AnyVariables>;
+
 	const { executeMutation: addNotebook } = useMutation(AddNotebookDoc);
+
 	function getNotebookInfo(
 		id: string
 	): UseQueryResponse<GetNotebookInfoQuery, GetNotebookInfoQueryVariables> {
@@ -46,13 +50,16 @@ export const useNotebook = defineStore('notebook', () => {
 	) as UseMutationResponse<
 		UpdateNotebookMutation,
 		UpdateNotebookMutationVariables
-	>;
+	>; 
+
+	const { executeQuery: getPublicNotebooks } = useQuery({ query: GetPublicNotebooksDoc }) as UseQueryResponse<GetPublicNotebooksQuery, AnyVariables>;
 
 	return {
 		getNotebooks,
 		addNotebook,
 		getNotebookInfo,
 		deleteNotebook,
-		updateNotebook
+		updateNotebook,
+		getPublicNotebooks
 	};
 });

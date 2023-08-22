@@ -24,10 +24,9 @@ export class UserResolver {
 	constructor(
 		private jwt: JwtService, 
 		private config: ConfigService,
-		private detantic: DetanticService
+		private dt: DetanticService
 	) {
-		const dt = this.detantic.getInstance();
-		this.users = dt.createModel("users", User.createSchema());
+		this.users = this.dt.createModel("users", User.createSchema());
 	}
 
 	/**
@@ -90,7 +89,7 @@ export class UserResolver {
 			throw new BadRequestException('Username exists');
 		}
 
-		const obj = await this.users.insert(args as unknown as Omit<User, "id">);
+		const obj = await this.users.insert(args);
 
 		const user = this.omitPassword(obj) as User;
 

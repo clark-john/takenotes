@@ -1,0 +1,5 @@
+query GetPublicNotebooks {
+  getPublicNotebooks {
+    ...RegularNotebook
+  }
+}

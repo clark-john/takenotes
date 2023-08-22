@@ -12,6 +12,10 @@ const routes: RouteRecordRaw[] = [
 				component: () => import('./pages/Index.vue')
 			},
 			{
+				path: 'shared',
+				component: () => import('./pages/Shared.vue')
+			},
+			{
 				path: 'notes/:id',
 				component: () => import('./pages/Notes.vue')
 			},

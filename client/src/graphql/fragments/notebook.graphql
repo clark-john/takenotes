@@ -6,4 +6,5 @@ fragment RegularNotebook on Notebook {
   createdAt
   saved
   backgroundColor
+  isPublic
 }

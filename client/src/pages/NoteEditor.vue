@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useNote } from '@stores';
 import { ChevronBack } from '@vicons/ionicons5';
+import { toBlob } from 'html-to-image';
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import throttle from 'lodash.throttle';
@@ -10,6 +11,8 @@ import { xss, marked } from '../utils';
 const note = ref({
 	content: ''
 });
+
+const noteRef = ref<HTMLDivElement>();
 
 const route = useRoute();
 const { getNoteInfo, updateNote } = useNote();
@@ -25,6 +28,7 @@ watchEffect(() => {
 });
 
 const isUpdating = ref(false);
+const isSavingImage = ref(false);
 
 const executeUpdate = throttle(() => {
 	updateNote({
@@ -40,6 +44,24 @@ function runThrottled() {
 	isUpdating.value = true;
 	executeUpdate();
 }
+
+async function saveAsImage(){
+	isSavingImage.value = true;
+	const blob = await toBlob(noteRef.value!, { 
+		type: "image/png", 
+		width: noteRef.value!.offsetWidth,
+		style: { overflow: 'auto' }
+	});
+	const a = document.createElement("a");
+	a.download = `note-${route.params.id}.png`;
+	const objUrl = URL.createObjectURL(blob!);
+	a.href = objUrl;
+	a.click();
+	a.remove();
+	URL.revokeObjectURL(objUrl);
+	isSavingImage.value = false;
+}
+
 </script>
 
 <template>
@@ -50,9 +72,9 @@ function runThrottled() {
 					<ChevronBack />
 				</n-icon>
 			</router-link>
-			<n-button @click="isPreview = !isPreview"
-				>Toggle Markdown Preview</n-button
-			>
+			<n-button @click="isPreview = !isPreview">
+				Toggle Markdown Preview
+			</n-button>
 			<div>
 				<div v-if="isUpdating"><n-spin size="small"></n-spin></div>
 				<div v-else>
@@ -60,7 +82,9 @@ function runThrottled() {
 				</div>
 			</div>
 		</div>
+
 		<div v-if="fetching"><CenteredSpin /></div>
+
 		<div v-else class="md">
 			<textarea
 				class="editor"
@@ -69,9 +93,9 @@ function runThrottled() {
 				@input="runThrottled"
 			>
 			</textarea>
-			<!-- @vue-ignore -->
 			<div
 				class="markdown"
+				ref="noteRef"
 				:style="{
 					backgroundColor: data?.getNote?.backgroundColor,
 					display: isPreview ? '' : 'none'
@@ -79,9 +103,15 @@ function runThrottled() {
 				v-html="xss(unip.parseToUnicode(marked.parse(note.content)))"
 			></div>
 		</div>
-		<!-- <div v-if="data" class="note">
-      <n-button type="error">Delete note</n-button>
-    </div> -->
+		<div v-if="data" class="note">
+      <n-button 
+        type="primary" 
+        :disabled="!isPreview"
+        @click="saveAsImage"
+      >
+        {{ isSavingImage ? "Saving" : "Save as Image" }}
+      </n-button>
+    </div>
 	</div>
 </template>
 

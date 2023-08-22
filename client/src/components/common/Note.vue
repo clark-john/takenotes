@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { EllipsisVertical } from '@vicons/ionicons5';
-import { xss, marked, keyFunctionRunner } from '../utils';
+import { xss, marked, keyFunctionRunner } from '../../utils';
 import { useNote, useSaved } from '@stores';
 
 interface Note {

@@ -1,11 +1,11 @@
-mutation AddNote(
-  $content: String!
-  $notebookId: ID!
-) {
-	createNote(note: {
-		content: $content
-		notebookId: $notebookId
-	}) {
-		...NoteInfo
-	}
-}
+# mutation AddNote(
+#   $content: String!
+#   $notebookId: ID!
+# ) {
+# 	createNote(note: {
+# 		content: $content
+# 		notebookId: $notebookId
+# 	}) {
+# 		...NoteInfo
+# 	}
+# }

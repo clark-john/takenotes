@@ -3,70 +3,73 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Note } from './dto/note';
 import { AddNotebook, Notebook, UpdateNotebook } from './dto/notebook';
 import * as chroma from 'chroma-js';
-import { set } from 'lodash';
 import { CurrentUserId } from 'src/decorators';
 import { DetanticService } from 'src/services';
 import { Model } from 'detantic';
+import { deserializeDate } from 'src/utils';
 
 @Resolver()
 export class NotebookResolver {
 	notes: Model<Note>;
 	notebooks: Model<Notebook>;
+	
 	constructor(
 		private dt: DetanticService
 	) {
-		const deta = this.dt.getInstance();
-		this.notes = deta.createModel("notes", Note.createSchema());
-		this.notebooks = deta.createModel("notebooks", Notebook.createSchema());
+		this.notes = this.dt.createModel("notes", Note.createSchema());
+		this.notebooks = this.dt.createModel("notebooks", Notebook.createSchema());
 	}
 
 	@Query(() => [Note])
 	async getNotes(@Args('notebookId', { type: () => String }) id: string) {
-		return (await this.notes.findMany({ notebookId: id })).map(x => {
-			x.createdAt = new Date(x.createdAt);
-			return x;
-		});
+		return (await this.notes.findMany({ notebookId: id })).map(deserializeDate);
 	}
 
 	@Query(() => [Notebook])
 	async getNotebooks(
 		@CurrentUserId() userId: string
 	): Promise<Omit<Notebook, 'notes'>[]> {
-		return (await this.notebooks.findMany({ userId })).map(x => {
-			x.createdAt = new Date(x.createdAt);
-			return x;
-		});
+		return (await this.notebooks.findMany({ userId })).map(deserializeDate);
+	}
+
+	@Query(() => [Notebook])
+	async getPublicNotebooks(
+		@Args({ 
+			type: () => Number, 
+			defaultValue: 10, 
+			name: 'limit' 
+		}) limit: number
+	): Promise<Notebook[]> {
+		const e= (await this.notebooks.findMany({ isPublic: true }, { limit }))
+			.map(deserializeDate)
+			.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+		console.log(e)
+		return e;
 	}
 
 	@Query(() => Notebook, { nullable: true })
 	async getNotebookInfo(@Args('id', { type: () => String }) id: string) {
-		const nb = await this.notebooks.findOne({ id });
-		set(nb, 'createdAt', new Date(nb.createdAt));
-		return nb;
+		return deserializeDate(await this.notebooks.findOne({ id }) as any);
 	}
 
 	@Mutation(() => Notebook)
 	async createNotebook(
 		@CurrentUserId() userId: string,
-		@Args('notebook') { name, description }: AddNotebook
+		@Args('notebook') { name, description, isPublic }: AddNotebook
 	): Promise<Notebook> {
-		const createdAt = new Date();
-		const n = await this.notebooks.insert({
+		return deserializeDate(await this.notebooks.insert({
 			name,
 			description,
-			createdAt,
+			createdAt: new Date(),
 			backgroundColor: chroma.random().hex('rgb'),
 			userId,
-			saved: false
-		});
-		// still no deserialization this 1.0.5, maybe will be added to 1.0.6 or 1.0.7 
-		n.createdAt = createdAt;
-		return n;
+			saved: false,
+			isPublic
+		}));
 	}
 
 	@Mutation(() => Notebook)
 	async deleteNotebook(
-		// @CurrentUserId() currentId: string,
 		@Args('id', { type: () => String }) id: string
 	) {
 		const nb = await this.notebooks.deleteByKey(id);

@@ -22,14 +22,9 @@ export type AccessToken = {
   user: User;
 };
 
-export type AddNote = {
-  backgroundColor?: InputMaybe<Scalars['String']['input']>;
-  content: Scalars['String']['input'];
-  notebookId: Scalars['ID']['input'];
-};
-
 export type AddNotebook = {
   description: Scalars['String']['input'];
+  isPublic?: Scalars['Boolean']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -41,7 +36,6 @@ export type Login = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBlankNote: Note;
-  createNote: Note;
   createNotebook: Notebook;
   deleteNote: Note;
   deleteNotebook: Notebook;
@@ -59,11 +53,6 @@ export type Mutation = {
 
 export type MutationCreateBlankNoteArgs = {
   notebookId: Scalars['String']['input'];
-};
-
-
-export type MutationCreateNoteArgs = {
-  note: AddNote;
 };
 
 
@@ -127,8 +116,9 @@ export type Note = {
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  isPublic: Scalars['Boolean']['output'];
   notebookId: Scalars['ID']['output'];
-  saved?: Maybe<Scalars['Boolean']['output']>;
+  saved: Scalars['Boolean']['output'];
   userId: Scalars['ID']['output'];
 };
 
@@ -138,6 +128,7 @@ export type Notebook = {
   createdAt: Scalars['DateTime']['output'];
   description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   saved: Scalars['Boolean']['output'];
   userId: Scalars['ID']['output'];
@@ -149,6 +140,7 @@ export type Query = {
   getNotebookInfo?: Maybe<Notebook>;
   getNotebooks: Array<Notebook>;
   getNotes: Array<Note>;
+  getPublicNotebooks: Array<Notebook>;
   getSavedNotebooks: Array<Notebook>;
   getSavedNotes: Array<Note>;
   hello: Scalars['String']['output'];
@@ -170,6 +162,11 @@ export type QueryGetNotesArgs = {
   notebookId: Scalars['String']['input'];
 };
 
+
+export type QueryGetPublicNotebooksArgs = {
+  limit?: Scalars['Float']['input'];
+};
+
 export type Register = {
   actualPassword?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -188,40 +185,35 @@ export type UpdateNote = {
 export type UpdateNotebook = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
   __typename?: 'User';
-  createdAt?: Maybe<Scalars['String']['output']>;
+  actualPassword?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
+  password: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
 
-export type NoteInfoFragment = { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any };
+export type NoteInfoFragment = { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean };
 
-export type RegularNotebookFragment = { __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null };
+export type RegularNotebookFragment = { __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean };
 
-export type SignedInFragment = { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } };
+export type SignedInFragment = { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null } };
 
-export type RegularUserFragment = { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null };
+export type RegularUserFragment = { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null };
 
 export type AddBlankNoteMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type AddBlankNoteMutation = { __typename?: 'Mutation', createBlankNote: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any } };
-
-export type AddNoteMutationVariables = Exact<{
-  content: Scalars['String']['input'];
-  notebookId: Scalars['ID']['input'];
-}>;
-
-
-export type AddNoteMutation = { __typename?: 'Mutation', createNote: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any } };
+export type AddBlankNoteMutation = { __typename?: 'Mutation', createBlankNote: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean } };
 
 export type AddNotebookMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -251,7 +243,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null } } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -266,7 +258,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null } } };
 
 export type SaveNoteMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -319,7 +311,7 @@ export type GetNoteInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetNoteInfoQuery = { __typename?: 'Query', getNote?: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any } | null };
+export type GetNoteInfoQuery = { __typename?: 'Query', getNote?: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean } | null };
 
 export type GetNotebookInfoQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -331,29 +323,34 @@ export type GetNotebookInfoQuery = { __typename?: 'Query', getNotebookInfo?: { _
 export type GetNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNotebooksQuery = { __typename?: 'Query', getNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null }> };
+export type GetNotebooksQuery = { __typename?: 'Query', getNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetNotesQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type GetNotesQuery = { __typename?: 'Query', getNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any }> };
+export type GetNotesQuery = { __typename?: 'Query', getNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean }> };
+
+export type GetPublicNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPublicNotebooksQuery = { __typename?: 'Query', getPublicNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetSavedNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSavedNotebooksQuery = { __typename?: 'Query', getSavedNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null }> };
+export type GetSavedNotebooksQuery = { __typename?: 'Query', getSavedNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetSavedNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSavedNotesQuery = { __typename?: 'Query', getSavedNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved?: boolean | null, createdAt: any }> };
+export type GetSavedNotesQuery = { __typename?: 'Query', getSavedNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: string | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null } };
 
 export const NoteInfo = gql`
     fragment NoteInfo on Note {
@@ -364,6 +361,7 @@ export const NoteInfo = gql`
   userId
   saved
   createdAt
+  isPublic
 }
     `;
 export const RegularNotebook = gql`
@@ -375,6 +373,7 @@ export const RegularNotebook = gql`
   createdAt
   saved
   backgroundColor
+  isPublic
 }
     `;
 export const RegularUser = gql`
@@ -397,13 +396,6 @@ export const SignedIn = gql`
 export const AddBlankNoteDoc = gql`
     mutation AddBlankNote($id: String!) {
   createBlankNote(notebookId: $id) {
-    ...NoteInfo
-  }
-}
-    ${NoteInfo}`;
-export const AddNoteDoc = gql`
-    mutation AddNote($content: String!, $notebookId: ID!) {
-  createNote(note: {content: $content, notebookId: $notebookId}) {
     ...NoteInfo
   }
 }
@@ -532,6 +524,13 @@ export const GetNotesDoc = gql`
   }
 }
     ${NoteInfo}`;
+export const GetPublicNotebooksDoc = gql`
+    query GetPublicNotebooks {
+  getPublicNotebooks {
+    ...RegularNotebook
+  }
+}
+    ${RegularNotebook}`;
 export const GetSavedNotebooksDoc = gql`
     query GetSavedNotebooks {
   getSavedNotebooks {
