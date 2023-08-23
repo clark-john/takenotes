@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Model } from 'detantic';
+import { remove } from 'lodash';
 import { Note } from 'src/resolvers/dto/note';
 import { Notebook } from 'src/resolvers/dto/notebook';
 import { NoteService } from './note.service';
 import { NotebookService } from './notebook.service';
 import { DetanticService } from './detantic.service';
-import { Model } from 'detantic';
 
 @Injectable()
 export class SavedService {
@@ -36,15 +37,23 @@ export class SavedService {
 			throw new Error('Unknown type');
 		}
 
-		if (isSave ? obj?.saved : !obj?.saved) {
+		const hasUserId = obj.savedBy.includes(userId);
+
+		if (isSave ? hasUserId : !hasUserId) {
 			throw new BadRequestException(`Already ${isSave ? 'save' : 'unsave'}d`);
 		}
 
 		// update object's saved property
-		if (type === 'note') {
-			await this.notes.updateById({ saved: isSave }, obj!.id);
+		if (isSave) {
+			obj.savedBy.push(userId)
 		} else {
-			await this.notebooks.updateById({ saved: isSave }, obj!.id);
+			remove(obj.savedBy, x => x === userId);
+		}
+
+		if (type === 'note') {
+			await this.notes.updateById({ savedBy: obj.savedBy }, obj!.id);
+		} else {
+			await this.notebooks.updateById({ savedBy: obj.savedBy }, obj!.id);				
 		}
 
 		return obj;

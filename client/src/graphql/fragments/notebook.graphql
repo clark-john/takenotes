@@ -4,7 +4,7 @@ fragment RegularNotebook on Notebook {
   userId
   description
   createdAt
-  saved
+  savedBy
   backgroundColor
   isPublic
 }

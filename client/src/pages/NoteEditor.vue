@@ -19,7 +19,7 @@ const { getNoteInfo, updateNote } = useNote();
 const { data, fetching } = getNoteInfo(route.params.id as string);
 
 const isPreview = ref(true);
-const isSaved = ref(false);
+const isSaved = ref<"error" | "saved" | null>();
 
 watchEffect(() => {
 	if (data.value?.getNote) {
@@ -34,8 +34,8 @@ const executeUpdate = throttle(() => {
 	updateNote({
 		content: note.value.content,
 		id: route.params.id as string
-	}).then(_result => {
-		isSaved.value = true;
+	}).then(({ data }) => {
+		isSaved.value = data ? 'saved' : 'error';
 		isUpdating.value = false;
 	});
 }, 1250);
@@ -78,7 +78,8 @@ async function saveAsImage(){
 			<div>
 				<div v-if="isUpdating"><n-spin size="small"></n-spin></div>
 				<div v-else>
-					<div v-if="isSaved">Saved</div>
+					<div v-if="isSaved === 'saved'">Saved</div>
+					<div v-else-if="isSaved! === 'error'">Error</div>
 				</div>
 			</div>
 		</div>

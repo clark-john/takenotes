@@ -4,11 +4,12 @@ import { useNotebook } from '@stores';
 // import { UseQueryResponse } from '@urql/vue';
 
 const { getPublicNotebooks } = useNotebook();
-const { data } = getPublicNotebooks();
+const { data, fetching } = getPublicNotebooks();
 </script>
 <template>
 	<div>
-		<NotebooksContainer>
+		<CenteredSpin v-if="fetching" />
+		<NotebooksContainer v-else>
 			<Notebook v-for="x in data?.getPublicNotebooks" 
 				:key="x.id"
 				:saved="x.saved"
@@ -16,6 +17,6 @@ const { data } = getPublicNotebooks();
 				:id="x.id"
 				:bg="x.backgroundColor || ''"
 			/>
-		</NotebooksContainer>	
+		</NotebooksContainer>
 	</div>
 </template>

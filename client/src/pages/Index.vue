@@ -38,7 +38,7 @@ const show = ref(false);
 					:name="x.name"
 					:bg="x.backgroundColor ?? ''"
 					:id="x.id"
-					:saved="x.saved"
+					:saved="x.savedBy.includes(x.userId)"
 				/>
 
 			</NotebooksContainer>

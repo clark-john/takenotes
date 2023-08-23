@@ -26,13 +26,14 @@ const dontHaveStyle: StyleValue = {
 							id,
 							backgroundColor,
 							name,
-							saved: s
+							savedBy,
+							userId
 						} of data.getSavedNotebooks"
 						:key="id"
 						:bg="backgroundColor ?? ''"
 						:id="id"
 						:name="name"
-						:saved="s"
+						:saved="savedBy.includes(userId)"
 					/>
 				</div>
 				<div v-else :style="dontHaveStyle">
@@ -49,7 +50,7 @@ const dontHaveStyle: StyleValue = {
 						:background-color="x.backgroundColor"
 						:content="x.content"
 						:notebook-id="x.notebookId"
-						:saved="x.saved!"
+						:saved="x.savedBy.includes(x.userId)"
 						class="note"
 					/>
 				</div>

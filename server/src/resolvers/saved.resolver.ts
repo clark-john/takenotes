@@ -4,7 +4,7 @@ import { CurrentUserId } from 'src/decorators';
 import { Note } from './dto/note';
 import { DetanticService, SavedService } from 'src/services';
 import { deserializeDate } from 'src/utils';
-import { Model } from 'detantic';
+import { type Model } from 'detantic';
 
 @Resolver()
 export class SavedResolver {
@@ -53,11 +53,17 @@ export class SavedResolver {
 
 	@Query(() => [Note])
 	async getSavedNotes(@CurrentUserId() userId: string){
-		return (await this.notes.findMany({ userId, saved: true })).map(deserializeDate);
+		return (await this.notes.findMany({ userId }))
+			.map(deserializeDate)
+			.filter(({ savedBy }) => savedBy.includes(userId))
+		;
 	}
 
 	@Query(() => [Notebook])
 	async getSavedNotebooks(@CurrentUserId() userId: string){
-		return (await this.notebooks.findMany({ userId, saved: true })).map(deserializeDate);
+		return (await this.notebooks.findMany({ userId }))
+			.map(deserializeDate)
+			.filter(({ savedBy }) => savedBy.includes(userId))
+		;
 	}
 }

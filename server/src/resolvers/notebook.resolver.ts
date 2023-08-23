@@ -40,11 +40,9 @@ export class NotebookResolver {
 			name: 'limit' 
 		}) limit: number
 	): Promise<Notebook[]> {
-		const e= (await this.notebooks.findMany({ isPublic: true }, { limit }))
+		return (await this.notebooks.findMany({ isPublic: true }, { limit }))
 			.map(deserializeDate)
 			.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
-		console.log(e)
-		return e;
 	}
 
 	@Query(() => Notebook, { nullable: true })
@@ -63,7 +61,7 @@ export class NotebookResolver {
 			createdAt: new Date(),
 			backgroundColor: chroma.random().hex('rgb'),
 			userId,
-			saved: false,
+			savedBy: [],
 			isPublic
 		}));
 	}

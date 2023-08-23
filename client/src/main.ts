@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import urql, { cacheExchange, fetchExchange } from '@urql/vue';
 import { createPinia } from 'pinia';
-import { Router } from 'vue-router';
+import { type Router } from 'vue-router';
 import './style.scss';
 import 'highlight.js/styles/a11y-light.css';
 import App from './App.vue';
@@ -13,7 +13,7 @@ const { VITE_SERVER_URL, DEV } = import.meta.env;
 declare global {
 	interface Window {
 		baseUrl: string;
-		getToken: () => string;
+		getToken: () => string | null;
 		setToken: (token: string) => void;
 		removeToken: () => void;
 		$router: Router;
@@ -26,7 +26,7 @@ const baseUrl = VITE_SERVER_URL;
 
 if (DEV) {
 	window.baseUrl = baseUrl;
-	window.getToken = () => localStorage.getItem('token') ?? '';
+	window.getToken = () => localStorage.getItem('token');
 	window.setToken = (token: string) => localStorage.setItem('token', token);
 	window.removeToken = () => localStorage.removeItem('token');
 	window.$router = router;

@@ -45,14 +45,15 @@ function addBlankNote() {
 						backgroundColor,
 						id,
 						notebookId,
-						saved
+						savedBy,
+						userId
 					} in data?.getNotes"
 					:key="id"
 					:content="content"
 					:backgroundColor="backgroundColor"
 					:id="id"
 					:notebook-id="notebookId"
-					:saved="saved!"
+					:saved="savedBy.includes(userId)"
 				/>
 			</div>
 			<div v-else class="no-notes">You currently don't have any notes</div>

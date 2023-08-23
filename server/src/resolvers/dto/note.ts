@@ -7,7 +7,7 @@ import {
 	OmitType,
 	PartialType
 } from '@nestjs/graphql';
-import { IsBoolean, IsDate, IsHexColor, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsHexColor, IsString, IsUUID } from 'class-validator';
 import { BaseModel } from 'detantic';
 
 @ObjectType()
@@ -38,6 +38,10 @@ export class Note extends BaseModel {
 	@Field(() => Boolean)
 	@IsBoolean()
 	saved: boolean;
+
+	@Field(() => [String])
+	@IsArray()
+	savedBy: string[];
 
 	@Field(() => Boolean)
 	@IsBoolean()

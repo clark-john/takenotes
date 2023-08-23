@@ -119,6 +119,7 @@ export type Note = {
   isPublic: Scalars['Boolean']['output'];
   notebookId: Scalars['ID']['output'];
   saved: Scalars['Boolean']['output'];
+  savedBy: Array<Scalars['String']['output']>;
   userId: Scalars['ID']['output'];
 };
 
@@ -130,7 +131,8 @@ export type Notebook = {
   id: Scalars['ID']['output'];
   isPublic: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
-  saved: Scalars['Boolean']['output'];
+  saved?: Maybe<Scalars['Boolean']['output']>;
+  savedBy: Array<Scalars['String']['output']>;
   userId: Scalars['ID']['output'];
 };
 
@@ -200,9 +202,9 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
-export type NoteInfoFragment = { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean };
+export type NoteInfoFragment = { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, savedBy: Array<string>, createdAt: any, isPublic: boolean };
 
-export type RegularNotebookFragment = { __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean };
+export type RegularNotebookFragment = { __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved?: boolean | null, savedBy: Array<string>, backgroundColor?: string | null, isPublic: boolean };
 
 export type SignedInFragment = { __typename?: 'AccessToken', accessToken: string, user: { __typename?: 'User', id: string, firstName: string, lastName?: string | null, username: string, createdAt?: any | null } };
 
@@ -213,7 +215,7 @@ export type AddBlankNoteMutationVariables = Exact<{
 }>;
 
 
-export type AddBlankNoteMutation = { __typename?: 'Mutation', createBlankNote: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean } };
+export type AddBlankNoteMutation = { __typename?: 'Mutation', createBlankNote: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, savedBy: Array<string>, createdAt: any, isPublic: boolean } };
 
 export type AddNotebookMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -311,7 +313,7 @@ export type GetNoteInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetNoteInfoQuery = { __typename?: 'Query', getNote?: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean } | null };
+export type GetNoteInfoQuery = { __typename?: 'Query', getNote?: { __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, savedBy: Array<string>, createdAt: any, isPublic: boolean } | null };
 
 export type GetNotebookInfoQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -323,29 +325,29 @@ export type GetNotebookInfoQuery = { __typename?: 'Query', getNotebookInfo?: { _
 export type GetNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetNotebooksQuery = { __typename?: 'Query', getNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
+export type GetNotebooksQuery = { __typename?: 'Query', getNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved?: boolean | null, savedBy: Array<string>, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetNotesQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type GetNotesQuery = { __typename?: 'Query', getNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean }> };
+export type GetNotesQuery = { __typename?: 'Query', getNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, savedBy: Array<string>, createdAt: any, isPublic: boolean }> };
 
 export type GetPublicNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPublicNotebooksQuery = { __typename?: 'Query', getPublicNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
+export type GetPublicNotebooksQuery = { __typename?: 'Query', getPublicNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved?: boolean | null, savedBy: Array<string>, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetSavedNotebooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSavedNotebooksQuery = { __typename?: 'Query', getSavedNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved: boolean, backgroundColor?: string | null, isPublic: boolean }> };
+export type GetSavedNotebooksQuery = { __typename?: 'Query', getSavedNotebooks: Array<{ __typename?: 'Notebook', id: string, name: string, userId: string, description: string, createdAt: any, saved?: boolean | null, savedBy: Array<string>, backgroundColor?: string | null, isPublic: boolean }> };
 
 export type GetSavedNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSavedNotesQuery = { __typename?: 'Query', getSavedNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, createdAt: any, isPublic: boolean }> };
+export type GetSavedNotesQuery = { __typename?: 'Query', getSavedNotes: Array<{ __typename?: 'Note', id: string, content: string, backgroundColor: string, notebookId: string, userId: string, saved: boolean, savedBy: Array<string>, createdAt: any, isPublic: boolean }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -360,6 +362,7 @@ export const NoteInfo = gql`
   notebookId
   userId
   saved
+  savedBy
   createdAt
   isPublic
 }
@@ -372,6 +375,7 @@ export const RegularNotebook = gql`
   description
   createdAt
   saved
+  savedBy
   backgroundColor
   isPublic
 }

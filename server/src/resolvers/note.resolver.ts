@@ -6,6 +6,7 @@ import { CurrentUserId } from 'src/decorators';
 import { deserializeDate, removeEmpty } from 'src/utils';
 import { NoteService } from 'src/services/note.service';
 import { DetanticService } from 'src/services';
+import { ForbiddenException } from '@nestjs/common';
 
 @Resolver()
 export class NoteResolver {
@@ -27,7 +28,8 @@ export class NoteResolver {
 			notebookId: id,
 			userId: currentId,
 			saved: false,
-			isPublic: true
+			isPublic: true,
+			savedBy: []
 		}));
 	}
 
@@ -36,7 +38,11 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('note') { backgroundColor, content, id }: UpdateNote
 	) {		
-		const note = await this.note.findOne(currentId, id);
+		// const note = await this.note.findOne(currentId, id);
+		const note = await this.notes.findOne({ id });
+		if (note.userId != currentId){
+			throw new ForbiddenException("Can't edit someone else's note");
+		}
 		const updates = removeEmpty({
 			content,
 			backgroundColor
