@@ -16,45 +16,39 @@ import {
 	UnsaveNotebookMutation,
 	UnsaveNotebookMutationVariables
 } from '@generated';
-import {
-	AnyVariables,
-	UseMutationResponse,
-	UseQueryResponse,
-	useMutation,
-	useQuery
-} from '@urql/vue';
+import { AnyVariables, useMutation, useQuery } from '@urql/vue';
 import { defineStore } from 'pinia';
 
 export const useSaved = defineStore('saved', () => {
-	const { executeQuery: getSavedNotes } = useQuery({
+	const { executeQuery: getSavedNotes } = useQuery<GetSavedNotesQuery, AnyVariables>({
 		query: GetSavedNotesDoc
-	}) as UseQueryResponse<GetSavedNotesQuery, AnyVariables>;
-	const { executeQuery: getSavedNotebooks } = useQuery({
+	});
+	const { executeQuery: getSavedNotebooks } = useQuery<GetSavedNotebooksQuery, AnyVariables>({
 		query: GetSavedNotebooksDoc
-	}) as UseQueryResponse<GetSavedNotebooksQuery, AnyVariables>;
+	});
 
 	/* save notebook */
-	const { executeMutation: saveNotebook } = useMutation(
+	const { executeMutation: saveNotebook } = useMutation<SaveNotebookMutation, SaveNotebookMutationVariables>(
 		SaveNotebookDoc
-	) as UseMutationResponse<SaveNotebookMutation, SaveNotebookMutationVariables>;
+	);
 
 	/* save note */
-	const { executeMutation: saveNote } = useMutation(
+	const { executeMutation: saveNote } = useMutation<SaveNoteMutation, SaveNoteMutationVariables>(
 		SaveNoteDoc
-	) as UseMutationResponse<SaveNoteMutation, SaveNoteMutationVariables>;
+	);
 
 	/* unsave note */
-	const { executeMutation: unsaveNote } = useMutation(
+	const { executeMutation: unsaveNote } = useMutation<UnsaveNoteMutation, UnsaveNoteMutationVariables>(
 		UnsaveNoteDoc
-	) as UseMutationResponse<UnsaveNoteMutation, UnsaveNoteMutationVariables>;
+	);
 
 	/* unsave notebook */
-	const { executeMutation: unsaveNotebook } = useMutation(
-		UnsaveNotebookDoc
-	) as UseMutationResponse<
+	const { executeMutation: unsaveNotebook } = useMutation<
 		UnsaveNotebookMutation,
 		UnsaveNotebookMutationVariables
-	>;
+	>(
+		UnsaveNotebookDoc
+	);
 
 	return {
 		saveNotebook,

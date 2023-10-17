@@ -15,8 +15,8 @@ export class SavedResolver {
 		private saved: SavedService,
 		private dt: DetanticService
 	) {
-		this.notes = this.dt.createModel("notes", Note.createSchema());
-		this.notebooks = this.dt.createModel("notebooks", Notebook.createSchema());
+		this.notes = this.dt.createModel("notes", new Note);
+		this.notebooks = this.dt.createModel("notebooks", new Notebook);
 	}
 
 	@Mutation(() => Notebook)
@@ -53,7 +53,7 @@ export class SavedResolver {
 
 	@Query(() => [Note])
 	async getSavedNotes(@CurrentUserId() userId: string){
-		return (await this.notes.findMany({ userId }))
+		return (await this.notes.findMany())
 			.map(deserializeDate)
 			.filter(({ savedBy }) => savedBy.includes(userId))
 		;
@@ -61,7 +61,7 @@ export class SavedResolver {
 
 	@Query(() => [Notebook])
 	async getSavedNotebooks(@CurrentUserId() userId: string){
-		return (await this.notebooks.findMany({ userId }))
+		return (await this.notebooks.findMany())
 			.map(deserializeDate)
 			.filter(({ savedBy }) => savedBy.includes(userId))
 		;

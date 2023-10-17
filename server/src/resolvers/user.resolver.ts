@@ -2,7 +2,6 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, Context } from '@nestjs/graphql';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as argon from 'argon2';
 import { Request, Response } from 'express';
 import { omit } from 'lodash';
 import {
@@ -14,19 +13,23 @@ import {
 import { Cookies } from 'src/decorators';
 import { DetanticService } from 'src/services';
 import { Model } from 'detantic';
+import * as NodeRSA from 'node-rsa';
+import { readFileSync } from 'fs';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 @Resolver()
 export class UserResolver {
 	users: Model<User>;
+	rsa: NodeRSA;
 
 	constructor(
 		private jwt: JwtService, 
 		private config: ConfigService,
 		private dt: DetanticService
 	) {
-		this.users = this.dt.createModel("users", User.createSchema());
+		this.users = this.dt.createModel("users", new User);
+		this.rsa = new NodeRSA(readFileSync("key.pem", "utf-8"));
 	}
 
 	/**
@@ -46,7 +49,7 @@ export class UserResolver {
 
 		user.createdAt = new Date(user.createdAt);
 		
-		if (!(await argon.verify(user.password, password))) {
+		if (this.rsa.decrypt(user.password, "utf8") !== password) {
 			throw new BadRequestException('Wrong password');
 		}
 
@@ -80,9 +83,9 @@ export class UserResolver {
 		const res = ctx.res as Response;
 		const args = register;
 		args.createdAt = new Date();
-		args.actualPassword = args.password;
-		args.password = await argon.hash(args.actualPassword);
-
+		
+		args.password = this.rsa.encrypt(args.password, "base64").toString()
+		
 		const items = await this.users.findMany({ username: args.username });
 
 		if (items.length !== 0) {

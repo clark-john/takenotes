@@ -3,7 +3,7 @@ import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { EllipsisVertical } from '@vicons/ionicons5';
-import { xss, marked, keyFunctionRunner } from '../../utils';
+import { xss, marked, keyFunctionRunner, isNotForCurrentUser } from '../../utils';
 import { useNote, useSaved } from '@stores';
 
 interface Note {
@@ -12,6 +12,7 @@ interface Note {
 	notebookId: string;
 	id: string;
 	saved?: boolean;
+	userId: string;
 }
 
 const router = useRouter();
@@ -48,10 +49,15 @@ function onConfirm() {
 watchEffect(() => {
 	const item = options.value.find(x => x.key === 'save' || x.key === 'unsave');
 	const index = options.value.indexOf(item!);
+
 	if (p.saved) {
 		options.value[index] = { label: 'Unsave', key: 'unsave' };
 	} else {
 		options.value[index] = { label: 'Save', key: 'save' };
+	}
+
+	if (options.value.find(x => x.key === 'delete') && isNotForCurrentUser(p.userId)) {
+		options.value.shift();
 	}
 });
 

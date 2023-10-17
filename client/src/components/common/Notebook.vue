@@ -4,7 +4,7 @@ import { EllipsisVertical } from '@vicons/ionicons5';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { ref, watchEffect } from 'vue';
 import { useNotebook, useSaved } from '@stores';
-import { keyFunctionRunner } from '../../utils';
+import { keyFunctionRunner, isNotForCurrentUser } from '../../utils';
 
 const { deleteNotebook, updateNotebook } = useNotebook();
 const { saveNotebook, unsaveNotebook } = useSaved();
@@ -21,6 +21,7 @@ const p = defineProps<{
 	name: string;
 	id: string;
 	saved: boolean;
+	userId: string;
 }>();
 /* eslint-disable vue/no-setup-props-destructure */
 const { id } = p;
@@ -45,8 +46,13 @@ const options = ref<DropdownOption[]>([
 ]);
 
 watchEffect(() => {
+	if (isNotForCurrentUser(p.userId)) {
+		options.value.splice(0, 2)
+	}
+
 	const item = options.value.find(x => x.key === 'save' || x.key === 'unsave');
 	const index = options.value.indexOf(item!);
+
 	if (p.saved) {
 		options.value[index] = { label: 'Unsave', key: 'unsave' };
 	} else {

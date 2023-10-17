@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import { useNote, useNotebook } from '@stores';
 import { ref, watchEffect } from 'vue';
 import { Note as NoteModel } from '@generated';
+import { isNotForCurrentUser, getSubFromToken } from '../utils';
 
 const route = useRoute();
 const { getNotes, createBlankNote } = useNote();
@@ -25,6 +26,8 @@ function addBlankNote() {
 		notes.value?.push(res.data!.createBlankNote);
 	});
 }
+
+const sub = getSubFromToken();
 </script>
 
 <template>
@@ -53,10 +56,16 @@ function addBlankNote() {
 					:backgroundColor="backgroundColor"
 					:id="id"
 					:notebook-id="notebookId"
-					:saved="savedBy.includes(userId)"
+					:saved="savedBy.includes(sub)"
+					:user-id="userId"
 				/>
 			</div>
-			<div v-else class="no-notes">You currently don't have any notes</div>
+			<div v-else class="no-notes">
+				{{ isNotForCurrentUser(ninfo.getNotebookInfo.userId) 
+					? "This notebook doesn't have any notes"
+					: "You currently don't have any notes"
+				}}  
+			</div>
 		</div>
 	</PaddingWrapper>
 </template>

@@ -2,11 +2,11 @@
 import { useNote } from '@stores';
 import { ChevronBack } from '@vicons/ionicons5';
 import { toBlob } from 'html-to-image';
-import { ref, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
 import throttle from 'lodash.throttle';
 import unip from 'universal-emoji-parser';
-import { xss, marked } from '../utils';
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+import { isNotForCurrentUser, marked, xss } from '../utils';
 
 const note = ref({
 	content: ''
@@ -62,6 +62,10 @@ async function saveAsImage(){
 	isSavingImage.value = false;
 }
 
+function isDisabled(){
+	return isNotForCurrentUser(data.value!.getNote!.userId)
+}
+
 </script>
 
 <template>
@@ -92,6 +96,7 @@ async function saveAsImage(){
 				:style="{ backgroundColor: data?.getNote?.backgroundColor }"
 				v-model="note.content"
 				@input="runThrottled"
+				:disabled="isDisabled()"
 			>
 			</textarea>
 			<div

@@ -29,9 +29,8 @@ const show = ref(false);
 				<!-- @vue-ignore -->
 				<Notebook
 					v-for="x of (() => {
-						data.getNotebooks.sort((a: Note, b: Note) => {
-							return a.createdAt < b.createdAt ? 1 : -1;
-						});
+						data.getNotebooks.sort((a: Note, b: Note) => 
+							a.createdAt < b.createdAt ? 1 : -1);
 						return data.getNotebooks;
 					})()"
 					:key="x.id"
@@ -39,10 +38,11 @@ const show = ref(false);
 					:bg="x.backgroundColor ?? ''"
 					:id="x.id"
 					:saved="x.savedBy.includes(x.userId)"
+					:user-id="x.userId"
 				/>
 
 			</NotebooksContainer>
-			<div v-else class="no-notebooks">You current don't have notebooks</div>
+			<div v-else class="no-notebooks">You currently don't have any notebooks</div>
 		</div>
 		<div v-else-if="fetching">
 			<CenteredSpin text="Loading your notebooks" />

@@ -9,7 +9,7 @@ import { Model } from 'detantic';
 export class NotebookService {
 	notebooks: Model<Notebook>;
 	constructor(private dt: DetanticService){
-		this.notebooks = this.dt.createModel("notebooks", Notebook.createSchema());
+		this.notebooks = this.dt.createModel("notebooks", new Notebook);
 	}
 	async findOne(currentId: string, id: string): Promise<Notebook> {
 		try {			

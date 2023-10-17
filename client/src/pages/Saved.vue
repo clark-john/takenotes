@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSaved } from '@stores';
 import { StyleValue } from 'vue';
+import { getSubFromToken } from '../utils';
 
 const { getSavedNotebooks, getSavedNotes } = useSaved();
 
@@ -12,6 +13,8 @@ const dontHaveStyle: StyleValue = {
 	marginBlock: '1rem',
 	color: '#999'
 };
+
+const sub = getSubFromToken();
 </script>
 
 <template>
@@ -33,7 +36,8 @@ const dontHaveStyle: StyleValue = {
 						:bg="backgroundColor ?? ''"
 						:id="id"
 						:name="name"
-						:saved="savedBy.includes(userId)"
+						:saved="savedBy.includes(sub)"
+						:user-id="userId"
 					/>
 				</div>
 				<div v-else :style="dontHaveStyle">
@@ -50,8 +54,9 @@ const dontHaveStyle: StyleValue = {
 						:background-color="x.backgroundColor"
 						:content="x.content"
 						:notebook-id="x.notebookId"
-						:saved="x.savedBy.includes(x.userId)"
+						:saved="x.savedBy.includes(sub)"
 						class="note"
+						:user-id="x.userId"
 					/>
 				</div>
 				<div v-else :style="dontHaveStyle">

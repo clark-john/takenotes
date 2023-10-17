@@ -4,16 +4,15 @@ import { Model } from 'detantic';
 import { Note, UpdateNote } from './dto/note';
 import { CurrentUserId } from 'src/decorators';
 import { deserializeDate, removeEmpty } from 'src/utils';
-import { NoteService } from 'src/services/note.service';
 import { DetanticService } from 'src/services';
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 @Resolver()
 export class NoteResolver {
 	notes: Model<Note>;
 
-	constructor(private note: NoteService, private dt: DetanticService) {
-		this.notes = this.dt.createModel("notes", Note.createSchema());
+	constructor(private dt: DetanticService) {
+		this.notes = this.dt.createModel("notes", new Note);
 	}
 
 	@Mutation(() => Note)
@@ -38,16 +37,21 @@ export class NoteResolver {
 		@CurrentUserId() currentId: string,
 		@Args('note') { backgroundColor, content, id }: UpdateNote
 	) {		
-		// const note = await this.note.findOne(currentId, id);
 		const note = await this.notes.findOne({ id });
+		
+		if (!note) {
+			throw new NotFoundException("Note not found");
+		}
+		
 		if (note.userId != currentId){
 			throw new ForbiddenException("Can't edit someone else's note");
 		}
+		
 		const updates = removeEmpty({
 			content,
 			backgroundColor
 		});
-		await this.notes.updateById(updates, note.id);
+		await this.notes.updateById(updates, note.id, { fetchId: false, objectData: note });
 		return 'update success';
 	}
 
@@ -57,7 +61,16 @@ export class NoteResolver {
 		@Args('id', { type: () => String }) id: string
 	) {
 		const note = await this.notes.findOne({ id, userId: currentId });
-		return await this.notes.deleteByKey((note as Note).id);
+
+		if (!note) {
+			throw new NotFoundException("Note not found");
+		}
+
+		if (note.userId != currentId){
+			throw new ForbiddenException("Can't delete someone else's note");
+		}
+
+		return await this.notes.deleteById((note as Note).id, { fetchId: false, objectData: note });
 	}
 
 	@Query(() => Note, { nullable: true })

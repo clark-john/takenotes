@@ -16,8 +16,8 @@ export class NotebookResolver {
 	constructor(
 		private dt: DetanticService
 	) {
-		this.notes = this.dt.createModel("notes", Note.createSchema());
-		this.notebooks = this.dt.createModel("notebooks", Notebook.createSchema());
+		this.notes = this.dt.createModel("notes", new Note);
+		this.notebooks = this.dt.createModel("notebooks", new Notebook);
 	}
 
 	@Query(() => [Note])
@@ -38,10 +38,12 @@ export class NotebookResolver {
 			type: () => Number, 
 			defaultValue: 10, 
 			name: 'limit' 
-		}) limit: number
+		}) limit: number,
+		@CurrentUserId() userId: string
 	): Promise<Notebook[]> {
 		return (await this.notebooks.findMany({ isPublic: true }, { limit }))
 			.map(deserializeDate)
+			.filter(x => x.userId !== userId)
 			.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
 	}
 
@@ -70,7 +72,7 @@ export class NotebookResolver {
 	async deleteNotebook(
 		@Args('id', { type: () => String }) id: string
 	) {
-		const nb = await this.notebooks.deleteByKey(id);
+		const nb = await this.notebooks.deleteById(id);
 		await this.notes.deleteMany({ notebookId: id });
 		return nb;
 	}

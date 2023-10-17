@@ -1,22 +1,26 @@
 <script lang="ts" setup>
 import { GetNotebookInfoQuery } from '@generated';
 import { ChevronBack } from '@vicons/ionicons5';
+import { useRouter } from 'vue-router';
 
 defineProps<{
 	ninfo?: GetNotebookInfoQuery;
 }>();
+
 const emit = defineEmits<{
 	(e: 'addBlankNote'): void;
 }>();
+
+const router = useRouter();
 </script>
 
 <template>
 	<div class="top">
-		<router-link to="/">
+		<div class="link" @click="router.back">
 			<n-icon size="40">
 				<ChevronBack />
 			</n-icon>
-		</router-link>
+		</div>
 		<div class="notebook-name">
 			{{ ninfo?.getNotebookInfo?.name }}
 		</div>
@@ -37,5 +41,11 @@ const emit = defineEmits<{
 }
 .hidden {
 	visibility: hidden;
+}
+
+.link {
+	&:hover {
+		cursor: pointer;
+	}
 }
 </style>

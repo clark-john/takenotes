@@ -33,7 +33,7 @@ export class Register {
 	password: string;
 
 	@Field({ nullable: true })
-	actualPassword: string;
+	actualPassword?: string;
 
 	@Field(() => GraphQLISODateTime, { nullable: true })
 	createdAt: Date;
@@ -66,11 +66,11 @@ export class User extends BaseModel {
 	@MinLength(8)
 	password: string;
 
-	@Field({ nullable: true })
+	/* @Field({ nullable: true })
 	@IsString()
 	@MinLength(8)
 	@Exclude()
-	actualPassword: string;
+	actualPassword?: string; */
 }
 
 @ObjectType()

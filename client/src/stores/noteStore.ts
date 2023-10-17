@@ -1,9 +1,4 @@
-import {
-	UseMutationResponse,
-	UseQueryResponse,
-	useMutation,
-	useQuery
-} from '@urql/vue';
+import { useMutation, useQuery } from '@urql/vue';
 import { defineStore } from 'pinia';
 import {
 	AddBlankNoteDoc,
@@ -26,31 +21,35 @@ export const useNote = defineStore('note', () => {
 	/* getNotes */
 	function getNotes(
 		id: string
-	): UseQueryResponse<GetNotesQuery, GetNotesQueryVariables> {
-		return useQuery({ query: GetNotesDoc, variables: { id } });
+	) {
+		return useQuery<GetNotesQuery, GetNotesQueryVariables>(
+			{ query: GetNotesDoc, variables: { id } }
+		);
 	}
 
 	/* createBlankNote */
-	const { executeMutation: createBlankNote } = useMutation(
+	const { executeMutation: createBlankNote } = useMutation<AddBlankNoteMutation, AddBlankNoteMutationVariables>(
 		AddBlankNoteDoc
-	) as UseMutationResponse<AddBlankNoteMutation, AddBlankNoteMutationVariables>;
+	);
 
 	/* getNoteInfo */
 	function getNoteInfo(
 		id: string
-	): UseQueryResponse<GetNoteInfoQuery, GetNoteInfoQueryVariables> {
-		return useQuery({ query: GetNoteInfoDoc, variables: { id } });
+	) {
+		return useQuery<GetNoteInfoQuery, GetNoteInfoQueryVariables>(
+			{ query: GetNoteInfoDoc, variables: { id } }
+		);
 	}
 
 	/* updateNote */
-	const { executeMutation: updateNote } = useMutation(
+	const { executeMutation: updateNote } = useMutation<any, Partial<UpdateNoteMutationVariables>>(
 		UpdateNoteDoc
-	) as UseMutationResponse<any, Partial<UpdateNoteMutationVariables>>;
+	);
 
 	/* deleteNote */
-	const { executeMutation: deleteNote } = useMutation(
+	const { executeMutation: deleteNote } = useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(
 		DeleteNoteDoc
-	) as UseMutationResponse<DeleteNoteMutation, DeleteNoteMutationVariables>;
+	);
 
 	return { getNotes, createBlankNote, getNoteInfo, updateNote, deleteNote };
 });

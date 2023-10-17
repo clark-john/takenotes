@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode';
 import { filterXSS, whiteList } from 'xss';
 
 // reexports
@@ -35,4 +36,12 @@ export function keyFunctionRunner(objOfFuncs: Record<string, () => void>) {
 	return (key: string) => {
 		(objOfFuncs[key] ?? (() => {}))();
 	};
+}
+
+export function isNotForCurrentUser(userId: string){ 
+	return jwtDecode<{ sub: string }>(localStorage.getItem('token')!).sub !== userId
+}
+
+export function getSubFromToken(){
+	return jwtDecode<{ sub: string }>(localStorage.getItem('token')!).sub;
 }

@@ -1,10 +1,4 @@
-import {
-  AnyVariables,
-	UseMutationResponse,
-	UseQueryResponse,
-	useMutation,
-	useQuery
-} from '@urql/vue';
+import { AnyVariables, useMutation, useQuery } from '@urql/vue';
 import {
 	AddNotebookDoc,
 	GetNotebooksDoc,
@@ -24,35 +18,35 @@ import {
 import { defineStore } from 'pinia';
 
 export const useNotebook = defineStore('notebook', () => {
-	const { executeQuery: getNotebooks } = useQuery({
+	const { executeQuery: getNotebooks } = useQuery<GetNotebooksQuery, AnyVariables>({
 		query: GetNotebooksDoc
-	}) as UseQueryResponse<GetNotebooksQuery, AnyVariables>;
+	});
 
 	const { executeMutation: addNotebook } = useMutation(AddNotebookDoc);
 
 	function getNotebookInfo(
 		id: string
-	): UseQueryResponse<GetNotebookInfoQuery, GetNotebookInfoQueryVariables> {
-		return useQuery({
+	) {
+		return useQuery<GetNotebookInfoQuery, GetNotebookInfoQueryVariables>({
 			query: GetNotebookInfoDoc,
 			variables: { id }
 		});
 	}
-	const { executeMutation: deleteNotebook } = useMutation(
-		DeleteNotebookDoc
-	) as UseMutationResponse<
+	const { executeMutation: deleteNotebook } = useMutation<
 		DeleteNotebookMutation,
 		DeleteNotebookMutationVariables
-	>;
+	>(
+		DeleteNotebookDoc
+	);
 
-	const { executeMutation: updateNotebook } = useMutation(
-		UpdateNotebookDoc
-	) as UseMutationResponse<
+	const { executeMutation: updateNotebook } = useMutation<
 		UpdateNotebookMutation,
 		UpdateNotebookMutationVariables
-	>; 
+	>(
+		UpdateNotebookDoc
+	); 
 
-	const { executeQuery: getPublicNotebooks } = useQuery({ query: GetPublicNotebooksDoc }) as UseQueryResponse<GetPublicNotebooksQuery, AnyVariables>;
+	const { executeQuery: getPublicNotebooks } = useQuery<GetPublicNotebooksQuery, AnyVariables>({ query: GetPublicNotebooksDoc });
 
 	return {
 		getNotebooks,

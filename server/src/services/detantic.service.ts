@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BaseModel, Detantic } from 'detantic';
+import { BaseModel, Detantic, Model } from 'detantic';
 
 @Injectable()
 export class DetanticService {
@@ -10,7 +10,7 @@ export class DetanticService {
 		this.detantic = Detantic(this.config.get("DETA_PROJECT_KEY"));
 	}
 	
-	createModel<T extends BaseModel>(basename: string, model: BaseModel){
-		return this.detantic.createModel<T>(basename, model);
+	createModel<T extends BaseModel>(basename: string, model: T): Model<T> {
+		return this.detantic.createModel(basename, model);
 	}
 }
