@@ -26,7 +26,6 @@ const show = ref(false);
 		</div>
 		<div v-if="data">
 			<NotebooksContainer class="container" v-if="data.getNotebooks.length">
-				<!-- @vue-ignore -->
 				<Notebook
 					v-for="x of (() => {
 						data.getNotebooks.sort((a: Note, b: Note) => 
