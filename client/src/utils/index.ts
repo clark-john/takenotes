@@ -38,10 +38,12 @@ export function keyFunctionRunner(objOfFuncs: Record<string, () => void>) {
 	};
 }
 
-export function isNotForCurrentUser(userId: string){ 
-	return jwtDecode<{ sub: string }>(localStorage.getItem('token')!).sub !== userId
+export function isNotForCurrentUser(userId: string) {
+	return (
+		jwtDecode<{ sub: string }>(localStorage.getItem('token')!).sub !== userId
+	);
 }
 
-export function getSubFromToken(){
+export function getSubFromToken() {
 	return jwtDecode<{ sub: string }>(localStorage.getItem('token')!).sub;
 }

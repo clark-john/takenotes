@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {
 	GetNotebooksQuery,
-	GetNotebooksQueryVariables,
-	Note
+	GetNotebooksQueryVariables
+	// Note
 } from '@generated';
 import { useNotebook } from '@stores/notebookStore';
 import { ref } from 'vue';
@@ -26,7 +26,7 @@ const show = ref(false);
 		</div>
 		<div v-if="data">
 			<NotebooksContainer class="container" v-if="data.getNotebooks.length">
-				<Notebook
+				<!-- <Notebook
 					v-for="x of (() => {
 						data.getNotebooks.sort((a: Note, b: Note) => 
 							a.createdAt < b.createdAt ? 1 : -1);
@@ -39,9 +39,11 @@ const show = ref(false);
 					:saved="x.savedBy.includes(x.userId)"
 					:user-id="x.userId"
 				/>
-
+ -->
 			</NotebooksContainer>
-			<div v-else class="no-notebooks">You currently don't have any notebooks</div>
+			<div v-else class="no-notebooks">
+				You currently don't have any notebooks
+			</div>
 		</div>
 		<div v-else-if="fetching">
 			<CenteredSpin text="Loading your notebooks" />

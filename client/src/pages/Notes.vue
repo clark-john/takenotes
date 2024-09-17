@@ -61,10 +61,11 @@ const sub = getSubFromToken();
 				/>
 			</div>
 			<div v-else class="no-notes">
-				{{ isNotForCurrentUser(ninfo.getNotebookInfo.userId) 
-					? "This notebook doesn't have any notes"
-					: "You currently don't have any notes"
-				}}  
+				{{
+					isNotForCurrentUser(ninfo.getNotebookInfo.userId)
+						? "This notebook doesn't have any notes"
+						: "You currently don't have any notes"
+				}}
 			</div>
 		</div>
 	</PaddingWrapper>

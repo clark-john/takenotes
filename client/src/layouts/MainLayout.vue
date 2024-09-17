@@ -3,7 +3,7 @@
 	withNavbar: boolean;
 }>();*/
 
-document.title = "Service Unavailable";
+document.title = 'Service Unavailable';
 </script>
 
 <template>
@@ -11,9 +11,10 @@ document.title = "Service Unavailable";
 	<!-- <router-view /> -->
 	<div class="container">
 		<div class="sad">:(</div>
-		<div class="text">Unfortunately, <b>takenotes</b> is unavailable for use due to shutdown of 
+		<div class="text">
+			Unfortunately, <b>takenotes</b> is unavailable for use due to shutdown of
 			<a href="https://deta.space/sunset" target="_blank">Deta</a>.
-		</div> 
+		</div>
 	</div>
 </template>
 
@@ -29,5 +30,4 @@ document.title = "Service Unavailable";
 		font-weight: 300;
 	}
 }
-
 </style>

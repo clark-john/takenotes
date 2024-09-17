@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				component: () => import('./pages/Index.vue')
-			}/*,
+			} /*,
 			{
 				path: 'shared',
 				component: () => import('./pages/Shared.vue')

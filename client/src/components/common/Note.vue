@@ -3,7 +3,12 @@ import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { DropdownOption, useLoadingBar, useMessage } from 'naive-ui';
 import { EllipsisVertical } from '@vicons/ionicons5';
-import { xss, marked, keyFunctionRunner, isNotForCurrentUser } from '../../utils';
+import {
+	xss,
+	marked,
+	keyFunctionRunner,
+	isNotForCurrentUser
+} from '../../utils';
 import { useNote, useSaved } from '@stores';
 
 interface Note {
@@ -56,7 +61,10 @@ watchEffect(() => {
 		options.value[index] = { label: 'Save', key: 'save' };
 	}
 
-	if (options.value.find(x => x.key === 'delete') && isNotForCurrentUser(p.userId)) {
+	if (
+		options.value.find(x => x.key === 'delete') &&
+		isNotForCurrentUser(p.userId)
+	) {
 		options.value.shift();
 	}
 });

@@ -12,7 +12,7 @@ const { data, fetching } = getCurrent();
 			<img src="/favicon.svg" alt="" height="30" />
 			TakeNotes
 		</div>
-		<div style='display: flex; gap:34px'>
+		<div style="display: flex; gap: 34px">
 			<router-link to="/">Your Notebooks</router-link>
 			<router-link to="/shared">Shared</router-link>
 		</div>

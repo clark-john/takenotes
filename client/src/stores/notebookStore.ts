@@ -12,21 +12,22 @@ import {
 	UpdateNotebookMutation,
 	UpdateNotebookMutationVariables,
 	GetNotebooksQuery,
-  GetPublicNotebooksDoc,
-  GetPublicNotebooksQuery
+	GetPublicNotebooksDoc,
+	GetPublicNotebooksQuery
 } from '@generated';
 import { defineStore } from 'pinia';
 
 export const useNotebook = defineStore('notebook', () => {
-	const { executeQuery: getNotebooks } = useQuery<GetNotebooksQuery, AnyVariables>({
+	const { executeQuery: getNotebooks } = useQuery<
+		GetNotebooksQuery,
+		AnyVariables
+	>({
 		query: GetNotebooksDoc
 	});
 
 	const { executeMutation: addNotebook } = useMutation(AddNotebookDoc);
 
-	function getNotebookInfo(
-		id: string
-	) {
+	function getNotebookInfo(id: string) {
 		return useQuery<GetNotebookInfoQuery, GetNotebookInfoQueryVariables>({
 			query: GetNotebookInfoDoc,
 			variables: { id }
@@ -35,18 +36,17 @@ export const useNotebook = defineStore('notebook', () => {
 	const { executeMutation: deleteNotebook } = useMutation<
 		DeleteNotebookMutation,
 		DeleteNotebookMutationVariables
-	>(
-		DeleteNotebookDoc
-	);
+	>(DeleteNotebookDoc);
 
 	const { executeMutation: updateNotebook } = useMutation<
 		UpdateNotebookMutation,
 		UpdateNotebookMutationVariables
-	>(
-		UpdateNotebookDoc
-	); 
+	>(UpdateNotebookDoc);
 
-	const { executeQuery: getPublicNotebooks } = useQuery<GetPublicNotebooksQuery, AnyVariables>({ query: GetPublicNotebooksDoc });
+	const { executeQuery: getPublicNotebooks } = useQuery<
+		GetPublicNotebooksQuery,
+		AnyVariables
+	>({ query: GetPublicNotebooksDoc });
 
 	return {
 		getNotebooks,
