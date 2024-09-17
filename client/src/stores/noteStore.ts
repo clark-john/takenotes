@@ -19,37 +19,38 @@ import {
 
 export const useNote = defineStore('note', () => {
 	/* getNotes */
-	function getNotes(
-		id: string
-	) {
-		return useQuery<GetNotesQuery, GetNotesQueryVariables>(
-			{ query: GetNotesDoc, variables: { id } }
-		);
+	function getNotes(id: string) {
+		return useQuery<GetNotesQuery, GetNotesQueryVariables>({
+			query: GetNotesDoc,
+			variables: { id }
+		});
 	}
 
 	/* createBlankNote */
-	const { executeMutation: createBlankNote } = useMutation<AddBlankNoteMutation, AddBlankNoteMutationVariables>(
-		AddBlankNoteDoc
-	);
+	const { executeMutation: createBlankNote } = useMutation<
+		AddBlankNoteMutation,
+		AddBlankNoteMutationVariables
+	>(AddBlankNoteDoc);
 
 	/* getNoteInfo */
-	function getNoteInfo(
-		id: string
-	) {
-		return useQuery<GetNoteInfoQuery, GetNoteInfoQueryVariables>(
-			{ query: GetNoteInfoDoc, variables: { id } }
-		);
+	function getNoteInfo(id: string) {
+		return useQuery<GetNoteInfoQuery, GetNoteInfoQueryVariables>({
+			query: GetNoteInfoDoc,
+			variables: { id }
+		});
 	}
 
 	/* updateNote */
-	const { executeMutation: updateNote } = useMutation<any, Partial<UpdateNoteMutationVariables>>(
-		UpdateNoteDoc
-	);
+	const { executeMutation: updateNote } = useMutation<
+		any,
+		Partial<UpdateNoteMutationVariables>
+	>(UpdateNoteDoc);
 
 	/* deleteNote */
-	const { executeMutation: deleteNote } = useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(
-		DeleteNoteDoc
-	);
+	const { executeMutation: deleteNote } = useMutation<
+		DeleteNoteMutation,
+		DeleteNoteMutationVariables
+	>(DeleteNoteDoc);
 
 	return { getNotes, createBlankNote, getNoteInfo, updateNote, deleteNote };
 });

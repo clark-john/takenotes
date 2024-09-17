@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '',
 				component: () => import('./pages/Index.vue')
-			},
+			} /*,
 			{
 				path: 'shared',
 				component: () => import('./pages/Shared.vue')
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: 'saved',
 				component: () => import('./pages/Saved.vue')
-			}
+			}*/
 		]
 	},
 	{

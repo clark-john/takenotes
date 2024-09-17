@@ -19,7 +19,7 @@ const { getNoteInfo, updateNote } = useNote();
 const { data, fetching } = getNoteInfo(route.params.id as string);
 
 const isPreview = ref(true);
-const isSaved = ref<"error" | "saved" | null>();
+const isSaved = ref<'error' | 'saved' | null>();
 
 watchEffect(() => {
 	if (data.value?.getNote) {
@@ -45,14 +45,14 @@ function runThrottled() {
 	executeUpdate();
 }
 
-async function saveAsImage(){
+async function saveAsImage() {
 	isSavingImage.value = true;
-	const blob = await toBlob(noteRef.value!, { 
-		type: "image/png", 
+	const blob = await toBlob(noteRef.value!, {
+		type: 'image/png',
 		width: noteRef.value!.offsetWidth,
 		style: { overflow: 'auto' }
 	});
-	const a = document.createElement("a");
+	const a = document.createElement('a');
 	a.download = `note-${route.params.id}.png`;
 	const objUrl = URL.createObjectURL(blob!);
 	a.href = objUrl;
@@ -62,10 +62,9 @@ async function saveAsImage(){
 	isSavingImage.value = false;
 }
 
-function isDisabled(){
-	return isNotForCurrentUser(data.value!.getNote!.userId)
+function isDisabled() {
+	return isNotForCurrentUser(data.value!.getNote!.userId);
 }
-
 </script>
 
 <template>
@@ -110,14 +109,10 @@ function isDisabled(){
 			></div>
 		</div>
 		<div v-if="data" class="note">
-      <n-button 
-        type="primary" 
-        :disabled="!isPreview"
-        @click="saveAsImage"
-      >
-        {{ isSavingImage ? "Saving" : "Save as Image" }}
-      </n-button>
-    </div>
+			<n-button type="primary" :disabled="!isPreview" @click="saveAsImage">
+				{{ isSavingImage ? 'Saving' : 'Save as Image' }}
+			</n-button>
+		</div>
 	</div>
 </template>
 

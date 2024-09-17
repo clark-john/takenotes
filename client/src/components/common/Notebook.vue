@@ -47,7 +47,7 @@ const options = ref<DropdownOption[]>([
 
 watchEffect(() => {
 	if (isNotForCurrentUser(p.userId)) {
-		options.value.splice(0, 2)
+		options.value.splice(0, 2);
 	}
 
 	const item = options.value.find(x => x.key === 'save' || x.key === 'unsave');

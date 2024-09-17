@@ -11,12 +11,11 @@ const sub = getSubFromToken();
 </script>
 <template>
 	<div class="main-page">
-		<div class="title">
-			Shared Notebooks
-		</div>
+		<div class="title">Shared Notebooks</div>
 		<CenteredSpin v-if="fetching" />
 		<NotebooksContainer v-else class="container">
-			<Notebook v-for="x in data?.getPublicNotebooks" 
+			<Notebook
+				v-for="x in data?.getPublicNotebooks"
 				:key="x.id"
 				:saved="x.savedBy.includes(sub)"
 				:name="x.name"
